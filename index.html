@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#070a12">
+<title>TMN Broker v16 Pro</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+var firebaseConfig={apiKey:"AIzaSyCyFuj-ryKYjrd6gInomSdImV3eJSdrP64",authDomain:"freeearningbot-7273d.firebaseapp.com",projectId:"freeearningbot-7273d",storageBucket:"freeearningbot-7273d.firebasestorage.app",messagingSenderId:"871198162534",appId:"1:871198162534:web:26342c295928162f96b7a7"};
+firebase.initializeApp(firebaseConfig);
+var fdb=firebase.firestore();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI','Hind Siliguri',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#070a12;color:#f8fafc;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden;font-size:14px;line-height:1.5}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;transition:.15s;user-select:none;font-size:inherit}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{font-family:inherit;outline:none;transition:.15s;color:inherit;font-size:inherit}
+::-webkit-scrollbar{width:0;height:0}
+.app{width:100%;max-width:480px;min-height:100vh;background:#070a12;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;background:#070a12;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+.screen.active{display:flex}
+.auth-bg{background:radial-gradient(circle at 15% 15%,rgba(59,130,246,.22),transparent 45%),radial-gradient(circle at 85% 85%,rgba(168,85,247,.18),transparent 45%),linear-gradient(180deg,#070a12 0%,#0d1421 50%,#070a12 100%)}
+.auth-body{padding:24px;flex:1;display:flex;flex-direction:column;min-height:100vh;position:relative;z-index:1}
+.auth-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.back-link{color:#94a3b8;font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 0;font-weight:600}
+.back-link::before{content:'←';font-size:18px}
+.po-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:12px}
+.po-logo-icon{position:relative;width:56px;height:46px}
+.po-logo-icon::before{content:'';position:absolute;left:0;top:0;width:32px;height:46px;border-radius:50% 40% 45% 45%;background:linear-gradient(135deg,#3b82f6,#1e40af)}
+.po-logo-icon::after{content:'';position:absolute;right:0;top:0;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#3b82f6)}
+.po-logo-text{font-size:28px;font-weight:800;background:linear-gradient(135deg,#fff 20%,#93c5fd 70%,#a855f7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.8px}
+.welcome-hero{text-align:center;padding:26px 0 20px;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.welcome-hero h1{font-size:30px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:14px;max-width:350px;letter-spacing:-.8px}
+.welcome-hero .tagline{color:#94a3b8;font-size:13px;font-weight:500;margin-bottom:26px;max-width:320px}
+.hero-features{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:30px}
+.hero-chip{background:rgba(22,32,46,.7);border:1px solid rgba(148,163,184,.12);border-radius:20px;padding:7px 15px;font-size:11px;color:#cbd5e1;font-weight:700}
+.btn-reg{width:100%;max-width:360px;padding:18px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-size:16px;font-weight:800;margin-bottom:14px;box-shadow:0 10px 28px rgba(59,130,246,.45)}
+.welcome-foot{text-align:center;font-size:14px;color:#94a3b8;margin-bottom:16px}
+.welcome-foot b{color:#60a5fa;font-weight:700;cursor:pointer}
+.demo-link{text-align:center;font-size:15px;color:#94a3b8;cursor:pointer;padding:10px;border-bottom:1px solid #64748b;align-self:center;margin-bottom:20px;font-weight:600}
+.auth-title{font-size:34px;font-weight:800;text-align:center;color:#fff;margin-bottom:8px;margin-top:10px;letter-spacing:-1.2px}
+.auth-sub{text-align:center;font-size:14px;color:#94a3b8;margin-bottom:28px}
+.auth-sub b{color:#60a5fa;font-weight:700;cursor:pointer;border-bottom:1px solid #60a5fa}
+.auth-input{width:100%;padding:17px 18px;border-radius:12px;border:1.5px solid rgba(148,163,184,.2);background:rgba(13,20,33,.75);color:#fff;font-size:15px;margin-bottom:14px}
+.auth-input:focus{border-color:#3b82f6;background:rgba(59,130,246,.08);box-shadow:0 0 0 4px rgba(59,130,246,.18)}
+.auth-input::placeholder{color:#64748b}
+.pw-wrap{position:relative}
+.pw-wrap input{width:100%;padding-right:52px}
+.pw-eye{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:18px;color:#64748b;cursor:pointer;padding:4px;user-select:none}
+.btn-signin{width:100%;padding:18px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 28px rgba(59,130,246,.45);letter-spacing:.3px}
+.auth-err{color:#ef4444;font-size:13px;text-align:center;min-height:20px;font-weight:700;margin-bottom:6px}
+.bonus-info{background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05));border:1px solid rgba(245,158,11,.4);color:#fde68a;font-size:12.5px;text-align:center;padding:13px;border-radius:12px;margin-bottom:14px;line-height:1.6}
+.bonus-info b{color:#f59e0b;font-weight:800}
+.pw-meter{margin:-8px 0 12px;padding:15px;background:rgba(13,20,33,.75);border-radius:12px;border:1px solid rgba(148,163,184,.12);display:none}
+.pw-meter.on{display:block}
+.pw-meter-bar{display:flex;gap:4px;margin-bottom:12px}
+.pw-meter-seg{flex:1;height:5px;background:rgba(148,163,184,.15);border-radius:3px}
+.pw-meter-seg.weak{background:#ef4444}
+.pw-meter-seg.med{background:#f59e0b}
+.pw-meter-seg.strong{background:#10b981}
+.pw-meter-label{font-size:11px;font-weight:800;text-align:center;margin-bottom:10px}
+.pw-meter-label.weak{color:#ef4444}
+.pw-meter-label.med{color:#f59e0b}
+.pw-meter-label.strong{color:#10b981}
+.pw-rules{list-style:none;display:flex;flex-direction:column;gap:6px}
+.pw-rule{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#64748b}
+.pw-rule::before{content:'○';font-size:13px;font-weight:900;color:#64748b;flex-shrink:0;width:14px;text-align:center}
+.pw-rule.ok{color:#10b981}
+.pw-rule.ok::before{content:'✓';color:#10b981}
+.topbar{padding:12px 16px;background:rgba(13,20,33,.75);border-bottom:1px solid rgba(148,163,184,.12);z-index:50;backdrop-filter:blur(16px);position:sticky;top:0}
+.top-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.user-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0;cursor:pointer;position:relative;border:2px solid rgba(96,165,250,.5);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.user-av::after{content:'';position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;background:#10b981;border-radius:50%;border:2px solid #070a12}
+.user-name{flex:1;font-size:14px;font-weight:700;color:#f8fafc}
+.user-uid{font-size:10px;color:#64748b;font-weight:600;font-family:monospace;margin-top:2px}
+.hdr-btn{width:40px;height:40px;border-radius:11px;background:rgba(30,41,59,.55);border:1px solid rgba(148,163,184,.12);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;position:relative}
+.hdr-btn.green{background:linear-gradient(135deg,#10b981,#059669);border:none;box-shadow:0 4px 14px rgba(16,185,129,.45)}
+.hdr-btn .badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:8px;min-width:16px;text-align:center;display:none}
+.hdr-btn .badge.on{display:block}
+.balance-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bal-mini{background:rgba(22,32,46,.7);border:1px solid rgba(148,163,184,.12);border-radius:12px;padding:12px 14px;cursor:pointer;position:relative;overflow:hidden}
+.bal-mini::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.bal-mini.demo::before{background:linear-gradient(180deg,#10b981,#059669)}
+.bal-mini.real::before{background:linear-gradient(180deg,#f59e0b,#d97706)}
+.bal-mini.active{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.28),0 0 22px rgba(59,130,246,.22)}
+.bal-mini .lbl{font-size:9px;color:#64748b;font-weight:800;letter-spacing:.8px}
+.bal-mini .amt{font-size:19px;font-weight:900;margin-top:5px;letter-spacing:-.5px}
+.bal-mini.demo .amt{color:#10b981}
+.bal-mini.real .amt{color:#f59e0b}
+.bal-mini .tag{position:absolute;top:10px;right:12px;font-size:8px;font-weight:900;padding:3px 7px;border-radius:5px}
+.bal-mini.demo .tag{background:rgba(16,185,129,.2);color:#10b981}
+.bal-mini.real .tag{background:rgba(245,158,11,.2);color:#f59e0b}
+.bonus-badge{font-size:8px;color:#f59e0b;margin-top:4px;font-weight:900}
+.mode-toggle{display:flex;gap:4px;background:rgba(30,41,59,.55);padding:4px;border-radius:12px;margin:12px 16px;border:1px solid rgba(148,163,184,.12)}
+.mode-toggle button{flex:1;padding:10px;border-radius:9px;font-size:12px;font-weight:800;color:#94a3b8;cursor:pointer;background:transparent}
+.mode-toggle button.on.demo{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.4)}
+.mode-toggle button.on.real{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;box-shadow:0 4px 14px rgba(245,158,11,.4)}
+.chart-wrap{position:relative;background:#070a12;height:300px;overflow:hidden;border-top:1px solid rgba(148,163,184,.12);border-bottom:1px solid rgba(148,163,184,.12)}
+.asset-row{position:absolute;top:12px;right:12px;z-index:5}
+.asset-btn{background:rgba(13,20,33,.75);border:1px solid rgba(148,163,184,.12);border-radius:10px;padding:9px 14px;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.asset-btn::after{content:'▾';font-size:10px;color:#64748b}
+.price-info{position:absolute;top:56px;right:16px;z-index:5;color:#94a3b8;font-size:11px;text-align:right;font-family:monospace}
+.price-info b{color:#fff;font-size:14px;display:block;margin-bottom:2px;font-weight:900;letter-spacing:-.3px}
+#chart{width:100%;height:100%;display:block}
+.pool-row{display:flex;align-items:center;height:30px;background:#070a12;padding:0 16px;gap:10px;font-size:11px;font-weight:800;font-family:monospace}
+.pool-row .up-pct{color:#10b981;min-width:36px}
+.pool-row .down-pct{color:#ef4444;min-width:36px;text-align:right}
+.pool-track{flex:1;height:6px;background:linear-gradient(90deg,#10b981 0%,#10b981 50%,#ef4444 50%,#ef4444 100%);border-radius:3px;position:relative}
+.pool-thumb{position:absolute;top:-4px;width:4px;height:14px;background:#fff;border-radius:2px;transition:left .3s}
+.trade-pnl{background:linear-gradient(180deg,rgba(30,41,59,.75),#070a12);padding:14px 16px;border-top:1px solid rgba(148,163,184,.12)}
+.input-row{display:flex;gap:10px;margin-bottom:10px}
+.t-input{flex:1;background:rgba(30,41,59,.55);border:1px solid rgba(148,163,184,.12);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.t-input .lbl{font-size:10px;color:#64748b;font-weight:800;margin-bottom:3px}
+.t-input .val{font-size:16px;font-weight:900;color:#fff;letter-spacing:-.3px}
+.t-input .ico{font-size:16px;color:#94a3b8}
+.payout-info{text-align:center;font-size:11px;color:#94a3b8;margin-bottom:12px}
+.payout-info b{color:#10b981;font-weight:800;font-size:13px}
+.btn-row{display:flex;gap:10px}
+.btn-trade{flex:1;padding:16px 18px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;color:#fff;font-weight:900;font-size:16px;cursor:pointer}
+.btn-trade .pct{background:rgba(255,255,255,.22);padding:4px 9px;border-radius:7px;font-size:11px}
+.btn-trade.buy{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 8px 22px rgba(16,185,129,.4)}
+.btn-trade.sell{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 8px 22px rgba(239,68,68,.4)}
+.active-list{background:#070a12;display:none;max-height:220px;overflow-y:auto;border-top:1px solid rgba(148,163,184,.12)}
+.active-list.on{display:block}
+.al-head{padding:10px 16px;display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:#64748b;background:#070a12;position:sticky;top:0;border-bottom:1px solid rgba(148,163,184,.12)}
+.al-head .n{color:#f59e0b}
+.al-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(30,48,80,.35)}
+.al-item.call{border-left:3px solid #10b981}
+.al-item.put{border-left:3px solid #ef4444}
+.al-side{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:900;flex-shrink:0}
+.al-side.call{background:linear-gradient(135deg,#10b981,#059669)}
+.al-side.put{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.al-info{flex:1;min-width:0;font-size:12px}
+.al-info .r1{font-weight:800;color:#fff;margin-bottom:2px}
+.al-info .r2{font-size:10px;color:#94a3b8;font-family:monospace}
+.al-time{font-size:13px;font-weight:900;color:#f59e0b}
+.bnav{display:flex;background:rgba(13,20,33,.75);border-top:1px solid rgba(148,163,184,.12);padding:6px 0 max(6px,env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:40;backdrop-filter:blur(16px)}
+.bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;font-size:10px;color:#94a3b8;font-weight:700;cursor:pointer;position:relative}
+.bn-btn .ic{font-size:20px}
+.bn-btn.center{transform:translateY(-10px)}
+.bn-btn.center .ic{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#1a2942,#3b82f6);border:2px solid #60a5fa;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 8px 22px rgba(59,130,246,.5)}
+.bn-badge{position:absolute;top:2px;right:calc(50% - 22px);min-width:16px;height:16px;background:#f59e0b;color:#000;font-size:9px;font-weight:900;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.bn-badge.on{display:flex}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
+.mask.on{opacity:1;pointer-events:auto}
+.smenu{position:fixed;top:0;left:0;bottom:0;width:88%;max-width:350px;background:linear-gradient(180deg,#0d1421,#070a12);z-index:101;transform:translateX(-100%);transition:transform .3s;overflow-y:auto;display:flex;flex-direction:column;border-right:1px solid rgba(148,163,184,.12)}
+.smenu.on{transform:translateX(0)}
+.sm-top{padding:22px 20px 14px;position:relative;background:linear-gradient(180deg,rgba(59,130,246,.08),transparent)}
+.sm-close{position:absolute;top:16px;right:16px;font-size:20px;color:#94a3b8;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(30,48,80,.5);border-radius:10px;cursor:pointer}
+.sm-user{display:flex;gap:14px;margin-bottom:14px}
+.sm-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;border:3px solid rgba(16,185,129,.7);flex-shrink:0}
+.sm-txt{flex:1;min-width:0}
+.sm-txt h3{font-size:16px;font-weight:900;color:#fff;margin-bottom:8px}
+.sm-txt .li{display:flex;align-items:center;gap:7px;font-size:11.5px;color:#94a3b8;margin-bottom:4px}
+.sm-txt .li b{color:#fff;font-weight:600}
+.btn-dep{width:100%;padding:14px;background:linear-gradient(135deg,#0891b2,#10b981);border-radius:11px;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;cursor:pointer}
+.sm-list{padding:0 10px 20px}
+.sm-item{display:flex;align-items:center;gap:14px;padding:14px;font-size:14px;color:#fff;border-radius:11px;cursor:pointer;font-weight:600}
+.sm-item .ic{font-size:19px;width:24px;text-align:center;color:#60a5fa;flex-shrink:0}
+.sm-item .ar{margin-left:auto;color:#94a3b8;font-size:12px}
+.sm-item.danger{color:#ff8a8a}
+.sm-item.danger .ic{color:#ff8a8a}
+.sm-item.agent{color:#c084fc}
+.sm-item.agent .ic{color:#c084fc}
+.sm-div{height:1px;background:rgba(148,163,184,.12);margin:10px 16px}
+.pg-head{padding:16px 18px;display:flex;align-items:center;gap:14px;background:rgba(13,20,33,.75);border-bottom:1px solid rgba(148,163,184,.12);position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}
+.pg-back{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(30,48,80,.6);border-radius:10px;font-size:18px;color:#fff;cursor:pointer}
+.pg-title{font-size:20px;font-weight:900;color:#fff;flex:1;letter-spacing:-.4px}
+.pg-body{padding:16px 16px 40px;flex:1}
+.cat-tabs{display:flex;gap:6px;padding:14px 16px 8px;overflow-x:auto;background:#070a12}
+.cat-tab{padding:9px 16px;border-radius:9px;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap;background:transparent;color:#94a3b8;border:1px solid transparent}
+.cat-tab.on{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.4)}
+.pair-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(30,48,80,.4);cursor:pointer}
+.pair-flags{font-size:22px;flex-shrink:0;letter-spacing:-4px;padding-right:4px}
+.pair-info{flex:1;min-width:0}
+.pair-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:5px}
+.pair-payouts{display:flex;gap:14px;font-size:11px;color:#94a3b8;font-weight:700}
+.pair-payouts span b{color:#f59e0b;font-weight:900}
+.pair-change{font-size:14px;font-weight:900;padding:5px 10px;border-radius:7px}
+.pair-change.up{background:rgba(16,185,129,.15);color:#10b981}
+.pair-change.down{background:rgba(239,68,68,.15);color:#ef4444}
+.tt-tabs{display:flex;background:rgba(30,48,80,.9);border-radius:11px;padding:4px;margin:0 16px 14px;border:1px solid rgba(148,163,184,.12)}
+.tt-tabs button{flex:1;padding:12px;color:#94a3b8;font-size:13px;font-weight:700;border-radius:9px;cursor:pointer;background:transparent}
+.tt-tabs button.on{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.4)}
+.tr-row{padding:12px 16px;border-bottom:1px solid rgba(30,48,80,.4);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tr-row .nm{font-size:13px;font-weight:700;color:#fff}
+.tr-row .sub{font-size:10px;color:#94a3b8;margin-top:3px}
+.tr-row .amt{font-size:14px;font-weight:800;color:#fff;text-align:right}
+.tr-row .rt{font-size:13px;font-weight:800;text-align:right}
+.tr-row .rt.win{color:#10b981}
+.tr-row .rt.lose{color:#ef4444}
+.pm-card{background:rgba(22,32,46,.7);border-radius:12px;border:1px solid rgba(148,163,184,.12);margin-bottom:10px;cursor:pointer;overflow:hidden}
+.pm-top{display:flex;align-items:center;gap:14px;padding:14px}
+.pm-logo{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0;overflow:hidden}
+.pm-logo img{width:100%;height:100%;object-fit:cover}
+.pm-name{font-size:15px;font-weight:700;color:#fff}
+.pm-meta{display:flex;justify-content:space-between;padding:11px 14px;border-top:1px solid rgba(30,48,80,.7);background:rgba(0,0,0,.2);font-size:12px;color:#94a3b8}
+.pm-meta b{color:#fff;font-weight:700}
+.info-box{background:rgba(59,130,246,.12);border:1px dashed rgba(59,130,246,.4);border-radius:11px;padding:13px;font-size:12.5px;line-height:1.7;color:#c9d8ee;margin-bottom:12px}
+.info-box.gold{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.4);color:#ffe4a3}
+.info-box.red{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.4);color:#ffb8bd}
+.info-box.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.4);color:#a8f0c0}
+.info-box.purple{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.4);color:#e0c4ff}
+.info-box b{color:#60a5fa;font-weight:800}
+.f-input{width:100%;padding:14px 16px;border-radius:11px;border:1.5px solid rgba(42,63,95,.9);background:rgba(30,41,59,.55);color:#fff;font-size:14px;margin-bottom:12px}
+.f-input:focus{border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.15)}
+.f-label{font-size:11px;color:#94a3b8;font-weight:800;margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.btn-primary{width:100%;padding:16px;border-radius:11px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:900;font-size:14px;margin-top:6px;cursor:pointer;box-shadow:0 8px 22px rgba(59,130,246,.4)}
+.bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.bal-card{background:rgba(22,32,46,.7);border-radius:12px;padding:15px;border:1px solid rgba(148,163,184,.12)}
+.bal-card .lbl{font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;text-transform:uppercase}
+.bal-card .amt{font-size:20px;font-weight:900;color:#fff}
+.bal-card.demo .amt{color:#10b981}
+.bal-card.real .amt{color:#f59e0b}
+.bal-card .tag{font-size:9px;font-weight:900;color:#94a3b8;margin-top:4px}
+.soc-row{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(30,48,80,.4);align-items:center}
+.soc-av{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0}
+.soc-info{flex:1;min-width:0}
+.soc-info .nm{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px}
+.soc-info .mt{font-size:11px;color:#94a3b8}
+.soc-profit .pr{font-size:14px;font-weight:900;text-align:right}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.modal-box{background:linear-gradient(180deg,#0d1421,#070a12);width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:22px 18px max(24px,env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;border-top:1px solid rgba(148,163,184,.12)}
+.modal-handle{width:44px;height:4px;background:rgba(148,163,184,.4);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-size:17px;font-weight:900;color:#fff;text-align:center;margin-bottom:18px;letter-spacing:-.3px}
+.dur-row{background:rgba(22,32,46,.7);border:1px solid rgba(42,63,95,.9);border-radius:11px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;cursor:pointer}
+.dur-row .nm{font-size:14px;font-weight:800;color:#fff}
+.dur-row .pc{font-size:13px;font-weight:800;color:#10b981}
+.btn-close{width:100%;padding:14px;border-radius:11px;background:rgba(30,41,59,.9);border:1px solid rgba(42,63,95,.9);color:#fff;font-weight:800;font-size:14px;margin-top:8px;cursor:pointer}
+.admin-head{padding:14px;background:#0d1117;border-bottom:1px solid rgba(255,179,0,.3);display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:20}
+.admin-head h1{font-size:16px;font-weight:900;flex:1;color:#ffb300}
+.adm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:12px 10px}
+.adm-stat{background:linear-gradient(135deg,rgba(22,38,61,.95),rgba(30,48,80,.85));border:1px solid rgba(30,48,80,.8);border-radius:11px;padding:10px 3px;text-align:center}
+.adm-stat .n{font-size:15px;font-weight:900;color:#5a8fff}
+.adm-stat .l{font-size:8px;color:#8fa3c2;font-weight:700;margin-top:3px}
+.adm-stat.gold .n{color:#ffb300}
+.adm-stat.green .n{color:#00c853}
+.adm-stat.red .n{color:#f23645}
+.adm-tabs{display:flex;gap:3px;background:rgba(22,38,61,.9);border-radius:11px;padding:4px;margin:0 10px 12px;overflow-x:auto;border:1px solid rgba(30,48,80,.8)}
+.adm-tabs button{flex:0 0 auto;padding:8px 12px;font-weight:800;font-size:11px;border-radius:8px;color:#8fa3c2;cursor:pointer;background:transparent;white-space:nowrap}
+.adm-tabs button.on{background:linear-gradient(135deg,#2d6fff,#1e50d9);color:#fff}
+.adm-body{padding:0 10px 40px}
+.u-row{background:linear-gradient(135deg,rgba(22,38,61,.95),rgba(30,48,80,.85));border-radius:11px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;border:1px solid rgba(30,48,80,.8)}
+.u-row.blocked{border-color:rgba(242,54,69,.4);background:rgba(242,54,69,.08)}
+.u-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2d6fff,#00c853);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;flex-shrink:0}
+.u-av.blk{background:linear-gradient(135deg,#f23645,#d32f2f)}
+.u-nm{font-size:13px;font-weight:900;color:#fff;margin-bottom:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.u-mt{font-size:10px;color:#8fa3c2;line-height:1.5}
+.u-act{display:flex;gap:5px;flex-shrink:0;flex-direction:column}
+.u-act-row{display:flex;gap:5px}
+.m-btn{padding:6px 10px;border-radius:7px;font-size:11px;font-weight:900;cursor:pointer;border:none}
+.m-btn.blk{background:#f23645;color:#fff}
+.m-btn.ublk{background:#00c853;color:#fff}
+.m-btn.apr{background:#00c853;color:#fff;flex:1}
+.m-btn.rej{background:#f23645;color:#fff;flex:1}
+.m-btn.edt{background:#2d6fff;color:#fff}
+.req{background:linear-gradient(135deg,rgba(22,38,61,.95),rgba(30,48,80,.85));border-radius:11px;padding:12px;margin-bottom:8px;border:1px solid rgba(30,48,80,.8);border-left:3px solid #ffb300}
+.req.apr{border-left-color:#00c853;opacity:.7}
+.req.rej{border-left-color:#f23645;opacity:.7}
+.req-r{display:flex;justify-content:space-between;padding:3px 0;font-size:12px}
+.req-r .k{color:#8fa3c2;font-weight:600}
+.req-r .v{font-weight:800;color:#fff}
+.set-card{background:linear-gradient(135deg,rgba(22,38,61,.95),rgba(30,48,80,.85));border:1px solid rgba(30,48,80,.8);border-radius:13px;padding:14px;margin-bottom:10px}
+.set-t{font-size:13px;font-weight:900;color:#fff;margin-bottom:6px}
+.set-d{font-size:11px;color:#8fa3c2;margin-bottom:12px;line-height:1.5}
+.slider{width:100%;height:6px;-webkit-appearance:none;background:linear-gradient(90deg,#f23645,#ffb300,#00c853);border-radius:3px;outline:none;margin-bottom:8px}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #2d6fff;cursor:pointer}
+.sl-val{font-size:22px;font-weight:900;text-align:center;color:#5a8fff}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(30,48,80,.4);font-size:13px}
+.set-row:last-child{border-bottom:none}
+.set-row .lbl{font-weight:700;color:#fff}
+.s-num{background:rgba(30,48,80,.7);border:1px solid rgba(42,63,95,.9);border-radius:8px;padding:6px 10px;color:#fff;font-size:13px;font-weight:900;width:90px;text-align:right;outline:none}
+.switch{position:relative;width:42px;height:22px;background:rgba(30,48,80,.7);border-radius:11px;cursor:pointer;transition:.25s;border:1px solid rgba(42,63,95,.9);flex-shrink:0;display:inline-block}
+.switch.on{background:#00c853;border-color:#00c853}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.25s}
+.switch.on::after{transform:translateX(20px)}
+.toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:92%}
+.toast{background:linear-gradient(135deg,rgba(26,41,66,.98),rgba(36,51,82,.98));color:#fff;padding:13px 20px;border-radius:13px;font-size:13px;font-weight:700;border:1px solid rgba(42,63,95,.9);box-shadow:0 14px 38px rgba(0,0,0,.6)}
+.toast.ok{border-color:rgba(16,185,129,.6)}
+.toast.err{border-color:rgba(239,68,68,.6)}
+.toast.gold{border-color:rgba(245,158,11,.6)}
+.admin-modal{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:900;display:none;align-items:center;justify-content:center;padding:20px}
+.admin-modal.on{display:flex}
+.admin-login-card{background:linear-gradient(180deg,#1a1f2e,#0d1117);border:1px solid rgba(245,158,11,.4);border-radius:20px;padding:26px;width:100%;max-width:390px}
+.admin-login-card h2{color:#f59e0b;font-size:22px;font-weight:900;text-align:center;margin-bottom:6px}
+.admin-login-card .sub{color:#94a3b8;font-size:11px;text-align:center;margin-bottom:22px}
+.admin-login-card input{width:100%;padding:15px;border-radius:11px;border:1.5px solid rgba(245,158,11,.3);background:rgba(0,0,0,.4);color:#fff;font-size:14px;margin-bottom:12px}
+.admin-login-card .btn-admin{width:100%;padding:15px;border-radius:11px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:900;font-size:14px;margin-bottom:8px;cursor:pointer}
+.admin-login-card .btn-cancel{width:100%;padding:13px;border-radius:11px;background:transparent;border:1px solid rgba(148,163,184,.4);color:#94a3b8;font-weight:700;font-size:13px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="screen active auth-bg" id="welcomeScreen">
+  <div class="auth-body">
+    <div class="po-logo"><div class="po-logo-icon"></div><div class="po-logo-text">TMN Broker</div></div>
+    <div class="welcome-hero">
+      <h1>Welcome to the cutting edge trading platform!</h1>
+      <div class="tagline">Trusted by thousands of traders worldwide</div>
+      <div class="hero-features">
+        <span class="hero-chip">⚡ Instant Trades</span>
+        <span class="hero-chip">🔒 Secure</span>
+        <span class="hero-chip">💰 $10K Demo</span>
+        <span class="hero-chip">📈 40+ Pairs</span>
+      </div>
+    </div>
+    <button class="btn-reg" onclick="show('registerScreen')">REGISTRATION</button>
+    <div class="welcome-foot">Already registered? <b onclick="show('loginScreen')">Sign in</b></div>
+    <div class="demo-link" onclick="demoLogin()">Try Free Demo →</div>
+  </div>
+</div>
+
+<div class="screen auth-bg" id="loginScreen">
+  <div class="auth-body">
+    <div class="auth-top"><div class="back-link" onclick="show('welcomeScreen')">Back</div></div>
+    <div class="po-logo"><div class="po-logo-icon"></div><div class="po-logo-text">TMN Broker</div></div>
+    <div class="auth-title">Sign in</div>
+    <div class="auth-sub">Not registered? <b onclick="show('registerScreen')">Registration</b></div>
+    <input class="auth-input" id="lgUser" placeholder="Email / Username" autocomplete="off">
+    <div class="pw-wrap"><input class="auth-input" id="lgPass" type="password" placeholder="Password"><span class="pw-eye" onclick="eyeToggle('lgPass',this)">👁️</span></div>
+    <div class="auth-err" id="lgErr"></div>
+    <button class="btn-signin" onclick="doLogin()">SIGN IN</button>
+  </div>
+</div>
+
+<div class="screen auth-bg" id="registerScreen">
+  <div class="auth-body">
+    <div class="auth-top"><div class="back-link" onclick="show('welcomeScreen')">Back</div></div>
+    <div class="po-logo"><div class="po-logo-icon"></div><div class="po-logo-text">TMN Broker</div></div>
+    <div class="auth-title">Registration</div>
+    <div class="bonus-info">🎁 <b>$10,000</b> ডেমো + Referral $1</div>
+    <input class="auth-input" id="rgUser" placeholder="Username (3-20 chars)" autocomplete="off">
+    <input class="auth-input" id="rgEmail" placeholder="Email address" type="email" autocomplete="off">
+    <div class="pw-wrap"><input class="auth-input" id="rgPass" type="password" placeholder="Strong Password"><span class="pw-eye" onclick="eyeToggle('rgPass',this)">👁️</span></div>
+    <div class="pw-meter" id="pwMeter">
+      <div class="pw-meter-bar"><div class="pw-meter-seg" id="seg1"></div><div class="pw-meter-seg" id="seg2"></div><div class="pw-meter-seg" id="seg3"></div><div class="pw-meter-seg" id="seg4"></div></div>
+      <div class="pw-meter-label" id="pwLabel">Password দুর্বল</div>
+      <ul class="pw-rules">
+        <li class="pw-rule" id="rule1">কমপক্ষে ৮ অক্ষর</li>
+        <li class="pw-rule" id="rule2">বড় হাতের (A-Z)</li>
+        <li class="pw-rule" id="rule3">ছোট হাতের (a-z)</li>
+        <li class="pw-rule" id="rule4">সংখ্যা (0-9)</li>
+        <li class="pw-rule" id="rule5">বিশেষ চিহ্ন (!@#$)</li>
+      </ul>
+    </div>
+    <div class="pw-wrap"><input class="auth-input" id="rgPass2" type="password" placeholder="Confirm Password"><span class="pw-eye" onclick="eyeToggle('rgPass2',this)">👁️</span></div>
+    <div class="auth-err" id="rgErr"></div>
+    <button class="btn-signin" id="rgBtn" onclick="doRegister()" disabled>CREATE ACCOUNT</button>
+  </div>
+</div>
+
+<div class="screen" id="mainScreen">
+  <div class="topbar">
+    <div class="top-row">
+      <div class="user-av" id="userAv" onclick="openSmenu()">U</div>
+      <div style="flex:1;min-width:0"><div class="user-name" id="topName">User</div><div class="user-uid">ID: <span id="topId">--</span></div></div>
+      <div class="hdr-btn" onclick="openPage('notifsPage')">🔔<span class="badge" id="notifBadge">0</span></div>
+      <div class="hdr-btn green" onclick="openPage('depositPage')">💼</div>
+    </div>
+    <div class="balance-cards">
+      <div class="bal-mini demo active" id="balDemo" onclick="setTradeMode('demo')"><div class="tag">DEMO</div><div class="lbl">🎮 DEMO</div><div class="amt">$<span id="demoBal">0.00</span></div></div>
+      <div class="bal-mini real" id="balReal" onclick="setTradeMode('real')"><div class="tag">REAL</div><div class="lbl">💎 REAL</div><div class="amt">$<span id="realBal">0.00</span></div></div>
+    </div>
+  </div>
+  <div class="mode-toggle">
+    <button id="modeDemo" class="on demo" onclick="setTradeMode('demo')">🎮 Demo</button>
+    <button id="modeReal" class="real" onclick="setTradeMode('real')">💎 Real</button>
+  </div>
+  <div class="chart-wrap">
+    <div class="asset-row"><button class="asset-btn" id="assetBtn" onclick="openPage('marketPage')">AUD/CAD OTC</button></div>
+    <div class="price-info"><b id="priceVal">1.03238</b><span id="timeVal">--:--:--</span></div>
+    <canvas id="chart"></canvas>
+  </div>
+  <div class="pool-row"><span class="up-pct" id="poolUpPct">50%</span><div class="pool-track"><div class="pool-thumb" id="poolThumb" style="left:50%"></div></div><span class="down-pct" id="poolDnPct">50%</span></div>
+  <div class="trade-pnl">
+    <div class="input-row">
+      <div class="t-input" onclick="openDurModal()"><div><div class="lbl">Timer</div><div class="val" id="durVal">00:05:00</div></div><span class="ico">🕐</span></div>
+      <div class="t-input" onclick="openAmtModal()"><div><div class="lbl">Investment</div><div class="val" id="amtVal">1</div></div><span class="ico">💲</span></div>
+    </div>
+    <div class="payout-info">Payout: <b id="payoutVal">$1.92</b></div>
+    <div class="btn-row">
+      <button class="btn-trade buy" onclick="placeTrade('call')"><span>Up</span><span class="pct" id="buyPct">92%</span></button>
+      <button class="btn-trade sell" onclick="placeTrade('put')"><span>Down</span><span class="pct" id="sellPct">92%</span></button>
+    </div>
+  </div>
+  <div class="active-list" id="activeList"><div class="al-head"><span>OPENED <span class="n" id="activeN">0</span></span><span>Total: $<span id="activeTot">0</span></span></div><div id="activeItems"></div></div>
+  <div class="bnav">
+    <div class="bn-btn" onclick="openPage('tradesPage')"><span class="ic">↕</span>Trades<span class="bn-badge" id="navBadge">0</span></div>
+    <div class="bn-btn" onclick="showTradeAnalytics()"><span class="ic">📊</span>Stats</div>
+    <div class="bn-btn center" onclick="toggleMarket()"><span class="ic">⇄</span></div>
+    <div class="bn-btn" onclick="openPage('socialPage')"><span class="ic">👥</span>Social</div>
+    <div class="bn-btn" onclick="openSmenu()"><span class="ic">☰</span>More</div>
+  </div>
+</div>
+
+<div class="screen" id="marketPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Select trade pair</div></div>
+  <div class="cat-tabs">
+    <button class="cat-tab on" data-cat="currencies" onclick="selectCat('currencies')">💱 CURRENCIES</button>
+    <button class="cat-tab" data-cat="crypto" onclick="selectCat('crypto')">₿ CRYPTO</button>
+    <button class="cat-tab" data-cat="commodities" onclick="selectCat('commodities')">🥇 COMMODITIES</button>
+    <button class="cat-tab" data-cat="stocks" onclick="selectCat('stocks')">📈 STOCKS</button>
+  </div>
+  <div id="marketList"></div>
+</div>
+
+<div class="mask" id="mask" onclick="closeSmenu()"></div>
+<div class="smenu" id="smenu">
+  <div class="sm-top">
+    <div class="sm-close" onclick="closeSmenu()">✕</div>
+    <div class="sm-user">
+      <div class="sm-av" id="smAv">U</div>
+      <div class="sm-txt">
+        <h3 id="smName">User</h3>
+        <div class="li">🆔 <b id="smId">--</b></div>
+        <div class="li">✉️ <b id="smEmail">user@mail.com</b></div>
+        <div class="li">🎮 Demo: <b style="color:#10b981">$<span id="smDemo">0</span></b></div>
+        <div class="li">💎 Real: <b style="color:#f59e0b">$<span id="smReal">0</span></b></div>
+      </div>
+    </div>
+    <button class="btn-dep" onclick="closeSmenu();openPage('depositPage')">💳 Deposit</button>
+  </div>
+  <div class="sm-list">
+    <div class="sm-item" onclick="closeSmenu();openPage('withdrawPage')"><span class="ic">💸</span>Withdrawal<span class="ar">▸</span></div>
+    <div class="sm-item" onclick="closeSmenu();openPage('historyPage')"><span class="ic">📜</span>History<span class="ar">▸</span></div>
+    <div class="sm-item" onclick="closeSmenu();showTradeAnalytics()"><span class="ic">📊</span>Analytics<span class="ar">▸</span></div>
+    <div class="sm-item" onclick="closeSmenu();openPage('changePassPage')"><span class="ic">🔑</span>Change Password<span class="ar">▸</span></div>
+    <div class="sm-div"></div>
+    <div class="sm-item danger" onclick="doLogout()"><span class="ic">🚪</span>Logout</div>
+  </div>
+</div>
+
+<div class="screen" id="tradesPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Trades</div></div>
+  <div style="padding:14px 0"><div class="tt-tabs"><button class="on" id="tabOpen" onclick="switchTab('open')">Opened</button><button id="tabClosed" onclick="switchTab('closed')">Closed</button></div><div id="tradesBody"></div></div>
+</div>
+
+<div class="screen" id="socialPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Social Trading</div></div>
+  <div style="padding:14px 0"><div class="info-box" style="margin:0 16px 14px">🏆 Top traders for 24h</div><div id="socialBody"></div></div>
+</div>
+
+<div class="screen" id="depositPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Deposit</div></div>
+  <div class="pg-body"><div class="info-box green">💎 Deposit → Real Balance</div><div id="depList"></div></div>
+</div>
+
+<div class="screen" id="withdrawPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Withdrawal</div></div>
+  <div class="pg-body">
+    <div class="info-box red">⚠️ শুধু Real balance withdraw</div>
+    <div class="bal-grid">
+      <div class="bal-card demo"><div class="lbl">🎮 DEMO</div><div class="amt">$<span id="wdDemo">0.00</span></div><div class="tag">Non-withdrawable</div></div>
+      <div class="bal-card real"><div class="lbl">💎 REAL</div><div class="amt">$<span id="wdReal">0.00</span></div><div class="tag">Withdrawable</div></div>
+    </div>
+    <div id="wdList"></div>
+    <div style="margin-top:14px">
+      <label class="f-label">Account Number</label><input class="f-input" id="wdNum" type="tel" placeholder="01XXXXXXXXX">
+      <label class="f-label">Amount ($)</label><input class="f-input" id="wdAmt" type="number">
+      <button class="btn-primary" onclick="submitWithdraw()">Request Withdrawal</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="historyPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">History</div></div>
+  <div class="pg-body" id="historyBody"></div>
+</div>
+
+<div class="screen" id="notifsPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Notifications</div></div>
+  <div class="pg-body" id="notifsBody"></div>
+</div>
+
+<div class="screen" id="changePassPage">
+  <div class="pg-head"><div class="pg-back" onclick="show('mainScreen')">←</div><div class="pg-title">Change Password</div></div>
+  <div class="pg-body">
+    <label class="f-label">Current Password</label><input class="f-input" id="cpOld" type="password">
+    <label class="f-label">New Password</label><input class="f-input" id="cpNew" type="password">
+    <label class="f-label">Confirm New Password</label><input class="f-input" id="cpNew2" type="password">
+    <div class="auth-err" id="cpErr"></div>
+    <button class="btn-primary" onclick="changePassword()">🔑 Update Password</button>
+  </div>
+</div>
+
+<div class="screen" id="adminScreen">
+  <div class="admin-head">
+    <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ffb300);display:flex;align-items:center;justify-content:center;font-size:18px">👑</div>
+    <h1>Admin Panel</h1>
+    <button style="padding:8px;color:#fff;font-size:16px" onclick="doLogout()">🚪</button>
+  </div>
+  <div class="adm-stats">
+    <div class="adm-stat"><div class="n" id="stUsers">0</div><div class="l">USERS</div></div>
+    <div class="adm-stat red"><div class="n" id="stBlk">0</div><div class="l">BLOCKED</div></div>
+    <div class="adm-stat green"><div class="n" id="stDep">0</div><div class="l">DEPOSITS</div></div>
+  </div>
+  <div class="adm-tabs">
+    <button id="atU" class="on" onclick="setAT('users')">👥 Users</button>
+    <button id="atD" onclick="setAT('deps')">💰 Deposits</button>
+    <button id="atW" onclick="setAT('wds')">💸 Withdraws</button>
+    <button id="atS" onclick="setAT('set')">⚙️ Settings</button>
+  </div>
+  <div class="adm-body" id="adminBody"></div>
+</div>
+
+<div class="admin-modal" id="adminModal">
+  <div class="admin-login-card">
+    <h2>👑 Admin Access</h2>
+    <div class="sub">Unauthorized access prohibited</div>
+    <input type="text" id="admUser" placeholder="Admin Username" autocomplete="off">
+    <input type="password" id="admPass" placeholder="Admin Password" autocomplete="off">
+    <div class="auth-err" id="admErr"></div>
+    <button class="btn-admin" onclick="doAdminLogin()">🔓 UNLOCK</button>
+    <button class="btn-cancel" onclick="closeAdminModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+</div>
+
+<script>
+'use strict';
+
+var UK='tmn_u_v16',SK='tmn_s_v16',AK='tmn_a_v16',CK='tmn_c_v16',ADMK='tmn_adm_v16',LOGK='tmn_log_v16';
+var SALT='TMN_SALT_2024_v16_SECURE';
+
+function sha256(str){
+  function rrot(n,b){return (n>>>b)|(n<<(32-b));}
+  var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var bytes=[];
+  for(var i=0;i<str.length;i++){var c=str.charCodeAt(i);if(c<128)bytes.push(c);else if(c<2048){bytes.push(192|(c>>6),128|(c&63));}else if(c<55296||c>=57344){bytes.push(224|(c>>12),128|((c>>6)&63),128|(c&63));}else{c=0x10000+(((c&0x3ff)<<10)|(str.charCodeAt(++i)&0x3ff));bytes.push(240|(c>>18),128|((c>>12)&63),128|((c>>6)&63),128|(c&63));}}
+  var l=bytes.length*8;bytes.push(0x80);while(bytes.length%64!==56)bytes.push(0);
+  bytes.push(0,0,0,0,(l>>>24)&255,(l>>>16)&255,(l>>>8)&255,l&255);
+  for(var off=0;off<bytes.length;off+=64){var w=new Array(64);for(var t=0;t<16;t++)w[t]=(bytes[off+t*4]<<24)|(bytes[off+t*4+1]<<16)|(bytes[off+t*4+2]<<8)|bytes[off+t*4+3];for(var t2=16;t2<64;t2++){var s0=rrot(w[t2-15],7)^rrot(w[t2-15],18)^(w[t2-15]>>>3);var s1=rrot(w[t2-2],17)^rrot(w[t2-2],19)^(w[t2-2]>>>10);w[t2]=(w[t2-16]+s0+w[t2-7]+s1)|0;}var a=H[0],b=H[1],c2=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];for(var t3=0;t3<64;t3++){var S1=rrot(e,6)^rrot(e,11)^rrot(e,25);var ch=(e&f)^(~e&g);var t1=(h+S1+ch+K[t3]+w[t3])|0;var S0=rrot(a,2)^rrot(a,13)^rrot(a,22);var maj=(a&b)^(a&c2)^(b&c2);var t2=(S0+maj)|0;h=g;g=f;f=e;e=(d+t1)|0;d=c2;c2=b;b=a;a=(t1+t2)|0;}H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c2)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;}
+  return H.map(function(x){return ('00000000'+(x>>>0).toString(16)).slice(-8);}).join('');
+}
+function hashPassword(pw){return sha256(sha256(pw+SALT)+SALT);}
+function verifyPassword(pw,h){if(h&&h.length===64)return hashPassword(pw)===h;return pw===h;}
+function hashStr(s){return sha256(String(s)+SALT).slice(0,8);}
+function hashAdmin(s){return sha256(sha256(s+SALT)+SALT);}
+
+function lUsers(){try{return JSON.parse(localStorage.getItem(UK)||'{}');}catch(e){return{};}}
+function sUsers(u){localStorage.setItem(UK,JSON.stringify(u));if(typeof syncAll==='function')syncAll(u);}
+function lLog(){try{return JSON.parse(localStorage.getItem(LOGK)||'[]');}catch(e){return[];}}
+function sLog(l){localStorage.setItem(LOGK,JSON.stringify(l.slice(-500)));}
+
+function getAdminCreds(){
+  var s=localStorage.getItem(ADMK);
+  if(s){try{return JSON.parse(s);}catch(e){}}
+  var c={usernameHash:hashAdmin('Mridul'),passwordHash:hashAdmin('hcde5arvA#'),failCount:0,lockUntil:0,totalLogins:0,lastLoginAt:0,createdAt:Date.now()};
+  localStorage.setItem(ADMK,JSON.stringify(c));
+  return c;
+}
+function saveAdminCreds(c){localStorage.setItem(ADMK,JSON.stringify(c));}
+
+var DEF={
+  appName:'TMN Broker',welcomeMsg:'Welcome to the cutting edge trading platform!',
+  winRate:55,forceMode:'random',maxWinStreak:5,maxLoseStreak:3,
+  payoutByDuration:{60:80,300:85,600:88,900:90,1800:92,3600:95,10800:97},
+  minTrade:1,maxTrade:5000,maxActive:10,
+  bonusRate:50,bonusMinDep:50,autoDeductBonus:true,demoInitBalance:10000,
+  minDeposit:10,minWithdraw:10,refBonus:1,refPercent:5,maxAccounts:1,
+  maxLoginAttempts:5,lockDuration:15,
+  methods:[
+    {id:'bkash',name:'বিকাশ (bKash)',logo:'bKash',color:'#e2136e',min:10,time:'~5 min',number:'01711-123456',enabled:true},
+    {id:'nagad',name:'নগদ (Nagad)',logo:'নগদ',color:'#f6921e',min:10,time:'~5 min',number:'01811-654321',enabled:true},
+    {id:'rocket',name:'রকেট (Rocket)',logo:'Rocket',color:'#8c3494',min:10,time:'~5 min',number:'017123456789',enabled:true}
+  ]
+};
+function lSettings(){try{var r=JSON.parse(localStorage.getItem(CK)||'{}');var m=Object.assign({},DEF,r);if(!m.methods||!m.methods.length)m.methods=JSON.parse(JSON.stringify(DEF.methods));if(!m.payoutByDuration)m.payoutByDuration=JSON.parse(JSON.stringify(DEF.payoutByDuration));return m;}catch(e){return JSON.parse(JSON.stringify(DEF));}}
+function sSettings(s){localStorage.setItem(CK,JSON.stringify(s));}
+
+var curUser=null,isAdmin=false;
+var tradeMode='demo',currentCat='currencies';
+var curAsset={name:'AUD/CAD OTC',cat:'currencies',flag:'🇦🇺🇨🇦',base:1.0325,vol:0.00008,dp:5,p1:94,p5:95};
+var curDur={sec:300,label:'5 min',short:'00:05:00'},curAmt=1;
+var price=curAsset.base,candles=[],trades=[],dirty=true;
+var CANDLE_N=60,VIS=45,ctx=null,cw=0,ch=0;
+
+function $(id){return document.getElementById(id);}
+function getUser(){return lUsers()[curUser];}
+function saveCur(u){var us=lUsers();us[curUser]=u;sUsers(us);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function debounce(fn,d){var t;return function(){var a=arguments,s=this;clearTimeout(t);t=setTimeout(function(){fn.apply(s,a);},d);};}
+function toast(msg,type){
+  var c=$('toasts'),t=document.createElement('div');
+  t.className='toast '+(type||'ok');
+  t.textContent=(type==='err'?'❌ ':type==='gold'?'🎁 ':'✅ ')+msg;
+  c.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';t.style.transition='.3s';},1800);
+  setTimeout(function(){t.remove();},2200);
+}
+function show(id){
+  var sc=document.querySelectorAll('.screen');
+  for(var i=0;i<sc.length;i++)sc[i].classList.remove('active');
+  var el=$(id);if(el)el.classList.add('active');
+  if(id==='marketPage')renderMarket();
+  if(id==='depositPage')renderDeposit();
+  if(id==='socialPage')renderSocial();
+  if(id==='adminScreen')renderAdmin();
+  if(id==='withdrawPage'){renderWdList();updateWdBal();}
+  if(id==='historyPage')renderHistory();
+  if(id==='notifsPage')renderNotifs();
+}
+function openPage(id){show(id);}
+function eyeToggle(id,el){var inp=$(id);inp.type=inp.type==='password'?'text':'password';el.textContent=inp.type==='password'?'👁️':'🙈';}
+function logAudit(a,u,d){var l=lLog();l.push({time:Date.now(),action:a,user:u||'?',detail:d||''});sLog(l);}
+
+function checkPassword(pw){return{length:pw.length>=8,upper:/[A-Z]/.test(pw),lower:/[a-z]/.test(pw),number:/[0-9]/.test(pw),special:/[!@#$%^&*()_\-+=\[\]{};:',.<>?\/\\|`~]/.test(pw)};}
+function isStrongPassword(pw){var c=checkPassword(pw);return c.length&&c.upper&&c.lower&&c.number&&c.special;}
+function getPasswordScore(pw){var c=checkPassword(pw),s=0;if(c.length)s++;if(c.upper)s++;if(c.lower)s++;if(c.number)s++;if(c.special)s++;return s;}
+function updatePwMeter(){
+  var pw=$('rgPass').value,m=$('pwMeter'),c=checkPassword(pw);
+  if(pw.length>0)m.classList.add('on');else m.classList.remove('on');
+  $('rule1').classList.toggle('ok',c.length);
+  $('rule2').classList.toggle('ok',c.upper);
+  $('rule3').classList.toggle('ok',c.lower);
+  $('rule4').classList.toggle('ok',c.number);
+  $('rule5').classList.toggle('ok',c.special);
+  var score=getPasswordScore(pw),segs=['seg1','seg2','seg3','seg4'];
+  for(var i=0;i<4;i++){var seg=$(segs[i]);seg.className='pw-meter-seg';if(i<score-1){var cls=score<=2?'weak':score<=4?'med':'strong';seg.classList.add(cls);}}
+  var lbl=$('pwLabel');lbl.className='pw-meter-label';
+  if(score<=2){lbl.textContent='🔴 Password দুর্বল';lbl.classList.add('weak');}
+  else if(score<=4){lbl.textContent='🟡 Password মাঝারি';lbl.classList.add('med');}
+  else{lbl.textContent='🟢 Password শক্তিশালী';lbl.classList.add('strong');}
+  var pw2=$('rgPass2').value,email=$('rgEmail').value.trim();
+  var emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  $('rgBtn').disabled=!(isStrongPassword(pw)&&pw===pw2&&$('rgUser').value.trim().length>=3&&emailOk);
+}
+
+function doRegister(){
+  var u=$('rgUser').value.trim(),email=$('rgEmail').value.trim();
+  var p=$('rgPass').value,p2=$('rgPass2').value;
+  $('rgErr').textContent='';
+  if(!u||u.length<3){$('rgErr').textContent='⚠️ Username ৩+';return;}
+  if(!/^[\w\u0980-\u09FF\u0600-\u06FF]{3,20}$/.test(u)){$('rgErr').textContent='⚠️ শুধু letters/numbers/_';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){$('rgErr').textContent='⚠️ সঠিক email';return;}
+  if(!isStrongPassword(p)){$('rgErr').textContent='⚠️ Strong password দিন';return;}
+  if(p!==p2){$('rgErr').textContent='⚠️ Password মিলছে না';return;}
+  var us=lUsers();
+  if(us[u]){$('rgErr').textContent='⚠️ Username taken';return;}
+  for(var un in us)if(us[un].email===email){$('rgErr').textContent='⚠️ Email registered';return;}
+  var s=lSettings();
+  us[u]={
+    password:hashPassword(p),email:email,
+    demoBalance:s.demoInitBalance,realBalance:0,activeBonus:0,totalDeposited:0,
+    history:[],blocked:false,pendingDeps:[],pendingWds:[],
+    activeTrades:[],withdrawHistory:[],
+    createdAt:Date.now(),lastSeen:Date.now(),
+    refCode:'TMN'+Math.floor(1000+Math.random()*9000),
+    twoFA:{enabled:false,secret:'',backupCodes:[]},
+    isAgent:false,agentBalance:0,agentHistory:[],agentMobile:'',agentClients:[],
+    assignedAgent:'',lockedMethod:null,lockedMethodName:null,
+    streakData:{wins:0,losses:0},customWinRate:null,
+    notifications:[]
+  };
+  sUsers(us);
+  $('rgUser').value='';$('rgEmail').value='';$('rgPass').value='';$('rgPass2').value='';
+  $('pwMeter').classList.remove('on');
+  toast('✅ Account created!');
+  setTimeout(function(){loginUser(u);},500);
+}
+function demoLogin(){
+  var id='demo'+Math.floor(Math.random()*10000);
+  var us=lUsers(),s=lSettings();
+  us[id]={
+    password:hashPassword('Demo@1234'),email:id+'@demo.com',
+    demoBalance:s.demoInitBalance,realBalance:0,activeBonus:0,
+    history:[],blocked:false,pendingDeps:[],pendingWds:[],
+    activeTrades:[],withdrawHistory:[],
+    createdAt:Date.now(),lastSeen:Date.now(),
+    refCode:'TMN'+Math.floor(1000+Math.random()*9000),
+    twoFA:{enabled:false,secret:'',backupCodes:[]},
+    isAgent:false,agentBalance:0,agentHistory:[],agentMobile:'',agentClients:[],
+    assignedAgent:'',lockedMethod:null,lockedMethodName:null,
+    streakData:{wins:0,losses:0},customWinRate:null,notifications:[]
+  };
+  sUsers(us);
+  loginUser(id);
+}
+
+function doLogin(){
+  var u=$('lgUser').value.trim(),p=$('lgPass').value;
+  $('lgErr').textContent='';
+  if(u==='#admin'||p==='#admin'){closeSmenu();openAdminModal();return;}
+  if(!u||p.length<4){$('lgErr').textContent='⚠️ Username ও password দিন';return;}
+  var us=lUsers();
+  if(!us[u]){$('lgErr').textContent='⚠️ ইউজার নেই';return;}
+  if(!verifyPassword(p,us[u].password)){$('lgErr').textContent='⚠️ ভুল password';return;}
+  if(us[u].password&&us[u].password.length!==64){us[u].password=hashPassword(p);sUsers(us);}
+  if(us[u].blocked){showBlockedScreen(u);return;}
+  loginUser(u);
+}
+function showBlockedScreen(un){
+  var u=lUsers()[un],s=lSettings();
+  var msg='🚫 আপনার অ্যাকাউন্ট ব্লক করা হয়েছে।';
+  if(u&&u.customBlockMessage)msg=u.customBlockMessage;
+  $('blockedReason').innerHTML='<div style="text-align:center;font-weight:900;color:#ff6b7a;margin-bottom:12px">'+esc(msg)+'</div>';
+  show('blockedScreen');
+}
+
+function loginUser(un){
+  curUser=un;
+  localStorage.setItem(SK,un);
+  localStorage.removeItem(AK);
+  isAdmin=false;
+  var u=getUser();
+  if(!u){toast('Error','err');return;}
+  var ini=un[0].toUpperCase();
+  $('userAv').textContent=ini;
+  $('smAv').textContent=ini;
+  $('topName').textContent=un;
+  $('smName').textContent=un;
+  $('smEmail').textContent=u.email||(un+'@mail.com');
+  $('topId').textContent=hashStr(un);
+  $('smId').textContent=hashStr(un);
+  updateBalUI();
+  trades=[];
+  if(u.activeTrades){var now=Date.now();for(var i=0;i<u.activeTrades.length;i++)if(u.activeTrades[i].expiry>now)trades.push(u.activeTrades[i]);}
+  buildCandles();
+  renderActiveList();
+  updatePayouts();
+  updatePool();
+  updateNotifBadge();
+  startLoop();
+  show('mainScreen');
+  setTimeout(function(){resizeCanvas();dirty=true;},50);
+  setTimeout(function(){resizeCanvas();dirty=true;},300);
+}
+function doLogout(){
+  localStorage.removeItem(SK);
+  localStorage.removeItem(AK);
+  location.reload();
+}
+
+function openAdminModal(){$('admUser').value='';$('admPass').value='';$('admErr').textContent='';$('adminModal').classList.add('on');}
+function closeAdminModal(){$('adminModal').classList.remove('on');}
+function doAdminLogin(){
+  var u=$('admUser').value.trim(),p=$('admPass').value;
+  $('admErr').textContent='';
+  var c=getAdminCreds();
+  if(c.lockUntil&&Date.now()<c.lockUntil){
+    var m=Math.ceil((c.lockUntil-Date.now())/60000);
+    if(m<=0){c.lockUntil=0;c.failCount=0;saveAdminCreds(c);}
+    else{$('admErr').textContent='🔒 Locked '+m+' min';return;}
+  }
+  var okU=(hashAdmin(u)===c.usernameHash);
+  var okP=(hashAdmin(p)===c.passwordHash);
+  if(!okU||!okP){
+    c.failCount=(c.failCount||0)+1;
+    if(c.failCount>=5){c.lockUntil=Date.now()+15*60*1000;c.failCount=0;$('admErr').textContent='🔒 5 failed. Locked 15 min';logAudit('ADMIN_LOCKED','admin','');}
+    else{$('admErr').textContent='❌ Invalid ('+c.failCount+'/5)';}
+    saveAdminCreds(c);
+    return;
+  }
+  c.failCount=0;
+  c.lastLoginAt=Date.now();
+  c.totalLogins=(c.totalLogins||0)+1;
+  saveAdminCreds(c);
+  closeAdminModal();
+  isAdmin=true;
+  curUser=null;
+  localStorage.setItem(AK,'1');
+  localStorage.removeItem(SK);
+  logAudit('ADMIN_LOGIN','admin','');
+  show('adminScreen');
+  setAT('users');
+  toast('✅ Welcome Admin','gold');
+}
+
+function updateBalUI(){
+  var u=getUser();if(!u)return;
+  $('demoBal').textContent=(u.demoBalance||0).toFixed(2);
+  $('realBal').textContent=(u.realBalance||0).toFixed(2);
+  $('smDemo').textContent=(u.demoBalance||0).toFixed(2);
+  $('smReal').textContent=(u.realBalance||0).toFixed(2);
+}
+function setTradeMode(m){
+  var u=getUser();
+  tradeMode=m;
+  if(m==='demo'){
+    $('modeDemo').classList.add('on','demo');$('modeReal').classList.remove('on','real');
+    $('balDemo').classList.add('active');$('balReal').classList.remove('active');
+    toast('🎮 Demo');
+  }else{
+    $('modeReal').classList.add('on','real');$('modeDemo').classList.remove('on','demo');
+    $('balReal').classList.add('active');$('balDemo').classList.remove('active');
+    if((u.realBalance||0)<=0)toast('Real $0','gold');else toast('💎 Real');
+  }
+}
+
+var MARKET=[
+  {cat:'currencies',name:'AUD/CAD OTC',flag:'🇦🇺🇨🇦',base:1.0325,vol:0.00008,dp:5,p1:94,p5:95,change:1.38},
+  {cat:'currencies',name:'USD/JPY OTC',flag:'🇺🇸🇯🇵',base:149.50,vol:0.008,dp:3,p1:93,p5:95,change:0.16},
+  {cat:'currencies',name:'EUR/USD',flag:'🇪🇺🇺🇸',base:1.1400,vol:0.00008,dp:5,p1:88,p5:90,change:0.12},
+  {cat:'currencies',name:'GBP/USD',flag:'🇬🇧🇺🇸',base:1.2650,vol:0.00009,dp:5,p1:87,p5:89,change:-0.05},
+  {cat:'currencies',name:'USD/BDT OTC',flag:'🇺🇸🇧🇩',base:110.50,vol:0.08,dp:3,p1:91,p5:93,change:0.08},
+  {cat:'crypto',name:'BTC/USDT',flag:'₿',base:50000,vol:40,dp:2,p1:85,p5:87,change:2.15},
+  {cat:'crypto',name:'ETH/USDT',flag:'Ξ',base:3000,vol:3,dp:2,p1:85,p5:88,change:1.42},
+  {cat:'commodities',name:'XAU/USD',flag:'🥇',base:2050,vol:1.5,dp:2,p1:89,p5:91,change:0.55},
+  {cat:'stocks',name:'Apple',flag:'🍎',base:178.50,vol:0.5,dp:2,p1:86,p5:88,change:0.75},
+  {cat:'stocks',name:'Tesla',flag:'🚗',base:242.80,vol:1.2,dp:2,p1:85,p5:88,change:-1.55}
+];
+function selectCat(cat){
+  currentCat=cat;
+  var tabs=document.querySelectorAll('.cat-tab');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.toggle('on',tabs[i].dataset.cat===cat);
+  renderMarket();
+}
+function renderMarket(){
+  var list=MARKET.filter(function(m){return m.cat===currentCat;});
+  var html='';
+  for(var i=0;i<list.length;i++){
+    var m=list[i],isCur=m.name===curAsset.name,up=m.change>=0;
+    html+='<div class="pair-row" data-name="'+esc(m.name)+'">'+
+      '<span class="pair-flags">'+m.flag+'</span>'+
+      '<div class="pair-info">'+
+        '<div class="pair-name">'+esc(m.name)+(isCur?' <span style="color:#3b82f6">✓</span>':'')+'</div>'+
+        '<div class="pair-payouts"><span>1+ min <b>'+m.p1+'%</b></span><span>5+ min <b>'+m.p5+'%</b></span></div>'+
+      '</div>'+
+      '<div class="pair-change '+(up?'up':'down')+'">'+(up?'↑':'↓')+' '+Math.abs(m.change).toFixed(2)+'%</div>'+
+    '</div>';
+  }
+  $('marketList').innerHTML=html;
+  var rows=$('marketList').querySelectorAll('[data-name]');
+  for(var k=0;k<rows.length;k++)rows[k].onclick=function(){
+    var name=this.dataset.name;
+    for(var m=0;m<MARKET.length;m++)if(MARKET[m].name===name){curAsset=Object.assign({},MARKET[m]);break;}
+    $('assetBtn').textContent=curAsset.name;
+    updatePayouts();buildCandles();dirty=true;
+    $('priceVal').textContent=price.toFixed(curAsset.dp);
+    show('mainScreen');
+  };
+}
+
+function buildCandles(){
+  candles.length=0;
+  var p=curAsset.base,v=curAsset.vol;
+  for(var i=0;i<CANDLE_N;i++){
+    var o=p,c=o+(Math.random()-0.5)*2*v;
+    var h=Math.max(o,c)+Math.random()*v*0.5;
+    var l=Math.min(o,c)-Math.random()*v*0.5;
+    candles.push({o:o,h:h,l:l,c:c});
+    p=c;
+  }
+  price=p;dirty=true;
+}
+var _raf=null,lTick=0,lChart=0,lClock=0,lTimer=0;
+function startLoop(){
+  if(_raf)cancelAnimationFrame(_raf);
+  function loop(now){
+    _raf=requestAnimationFrame(loop);
+    var W=$('chart').clientWidth,H=$('chart').clientHeight;
+    if(W>0&&H>0&&(cw!==W||ch!==H)){
+      cw=W;ch=H;
+      var dpr=Math.min(window.devicePixelRatio||1,2);
+      $('chart').width=W*dpr;$('chart').height=H*dpr;
+      if(ctx)ctx.setTransform(dpr,0,0,dpr,0,0);
+      dirty=true;
+    }
+    if(dirty&&now-lChart>=33){lChart=now;drawChart();dirty=false;}
+    if(now-lTick>=1200){lTick=now;tickPrice();}
+    if(now-lClock>=1000){lClock=now;var d=new Date();$('timeVal').textContent=d.toTimeString().slice(0,8);}
+    if(trades.length&&now-lTimer>=250){lTimer=now;updateTimers();}
+  }
+  _raf=requestAnimationFrame(loop);
+}
+function tickPrice(){
+  var v=curAsset.vol,last=candles[candles.length-1];
+  if(!last)return;
+  last.c+=(Math.random()-0.5)*2*v;
+  if(last.c>last.h)last.h=last.c;
+  if(last.c<last.l)last.l=last.c;
+  if(Math.random()<0.28){var o=last.c;candles.push({o:o,h:o,l:o,c:o});if(candles.length>CANDLE_N+10)candles.shift();}
+  price=last.c;dirty=true;
+  $('priceVal').textContent=price.toFixed(curAsset.dp);
+  updatePool();
+}
+function resizeCanvas(){
+  var canvas=$('chart');if(!canvas)return;
+  ctx=canvas.getContext('2d');
+  var w=canvas.clientWidth||400,h=canvas.clientHeight||250;
+  cw=w;ch=h;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=cw*dpr;canvas.height=ch*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  dirty=true;
+}
+window.addEventListener('resize',debounce(resizeCanvas,150));
+function drawChart(){
+  if(!ctx){resizeCanvas();if(!ctx)return;}
+  if(!cw||!ch){cw=$('chart').clientWidth||400;ch=$('chart').clientHeight||250;}
+  ctx.clearRect(0,0,cw,ch);
+  ctx.fillStyle='#070a12';ctx.fillRect(0,0,cw,ch);
+  ctx.strokeStyle='rgba(30,48,80,.5)';ctx.lineWidth=1;
+  ctx.beginPath();
+  for(var i=1;i<6;i++){var y=(ch/6)*i;ctx.moveTo(0,y);ctx.lineTo(cw,y);}
+  for(var j=1;j<7;j++){var x=(cw/7)*j;ctx.moveTo(x,0);ctx.lineTo(x,ch);}
+  ctx.stroke();
+  var start=Math.max(0,candles.length-VIS),vis=candles.slice(start);
+  if(!vis.length)return;
+  var min=Infinity,max=-Infinity;
+  for(var k=0;k<vis.length;k++){var c=vis[k];if(c.l<min)min=c.l;if(c.h>max)max=c.h;}
+  var range=max-min||1,pad=range*0.08;
+  var yMin=min-pad,yR=(max+pad)-yMin;
+  var cw_=(cw/(vis.length+2))*0.75,gap=(cw-cw_*vis.length)/(vis.length+1),sY=ch/yR;
+  for(var n=0;n<trades.length;n++){
+    var t=trades[n],ly=ch-((t.entry-yMin)/yR)*ch;
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle=t.side==='call'?'rgba(16,185,129,.7)':'rgba(239,68,68,.7)';
+    ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(0,ly);ctx.lineTo(cw,ly);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  for(var p2=0;p2<vis.length;p2++){
+    var cc=vis[p2],x2=gap+(gap+cw_)*p2+cw_/2,up=cc.c>=cc.o,color=up?'#10b981':'#ef4444';
+    var bt=ch-(Math.max(cc.o,cc.c)-yMin)*sY,bb=ch-(Math.min(cc.o,cc.c)-yMin)*sY;
+    var wt=ch-(cc.h-yMin)*sY,wb=ch-(cc.l-yMin)*sY;
+    ctx.strokeStyle=color;ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(x2,wt);ctx.lineTo(x2,wb);ctx.stroke();
+    ctx.fillStyle=color;
+    ctx.fillRect(x2-cw_/2,bt,cw_,Math.max(1.5,bb-bt));
+  }
+  var lastC=vis[vis.length-1].c,labelY=ch-(lastC-yMin)*sY;
+  ctx.setLineDash([5,5]);ctx.strokeStyle='#3b82f6';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,labelY);ctx.lineTo(cw,labelY);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#3b82f6';ctx.fillRect(cw-70,labelY-11,66,22);
+  ctx.fillStyle='#fff';ctx.font='700 12px sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(lastC.toFixed(curAsset.dp),cw-37,labelY);
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+}
+
+function updatePayouts(){
+  var s=lSettings(),sec=curDur.sec;
+  var pct=s.payoutByDuration&&s.payoutByDuration[sec]?s.payoutByDuration[sec]:(sec===60?curAsset.p1:sec===300?curAsset.p5:(curAsset.p1+2));
+  $('buyPct').textContent=pct+'%';
+  $('sellPct').textContent=pct+'%';
+  $('payoutVal').textContent='$'+(curAmt*(1+pct/100)).toFixed(2);
+}
+function updatePool(){
+  var up=0,down=0;
+  for(var i=0;i<trades.length;i++){if(trades[i].side==='call')up+=trades[i].amount;else down+=trades[i].amount;}
+  var tot=up+down||1,uPct=Math.round(up/tot*100);
+  $('poolUpPct').textContent=uPct+'%';
+  $('poolDnPct').textContent=(100-uPct)+'%';
+  $('poolThumb').style.left=uPct+'%';
+}
+function placeTrade(side){
+  var u=getUser();if(!u)return;
+  if(u.blocked){toast('Blocked','err');return;}
+  var s=lSettings();
+  if(trades.length>=s.maxActive){toast('Max '+s.maxActive,'err');return;}
+  if(curAmt>s.maxTrade){toast('Max $'+s.maxTrade,'err');return;}
+  var bal=tradeMode==='demo'?(u.demoBalance||0):(u.realBalance||0);
+  if(bal<curAmt){toast('Insufficient','err');return;}
+  if(tradeMode==='demo')u.demoBalance-=curAmt;else u.realBalance-=curAmt;
+  var id='t_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  var pct=s.payoutByDuration&&s.payoutByDuration[curDur.sec]?s.payoutByDuration[curDur.sec]:(curDur.sec===60?curAsset.p1:curDur.sec===300?curAsset.p5:(curAsset.p1+2));
+  trades.push({id:id,side:side,entry:price,amount:curAmt,asset:curAsset.name,duration:curDur.sec,payout:pct,expiry:Date.now()+curDur.sec*1000,isDemo:tradeMode==='demo'});
+  u.activeTrades=trades;
+  saveCur(u);
+  updateBalUI();renderActiveList();dirty=true;updatePool();
+  toast((tradeMode==='demo'?'🎮 ':'💎 ')+curDur.label+' — $'+curAmt);
+}
+function updateTimers(){
+  var now=Date.now(),exp=[];
+  for(var i=0;i<trades.length;i++){
+    var t=trades[i];
+    var rem=Math.max(0,Math.floor((t.expiry-now)/1000));
+    t._rem=rem;
+    if(rem<=0)exp.push(t);
+  }
+  renderActiveList();
+  for(var j=0;j<exp.length;j++)resolveTrade(exp[j].id);
+}
+function resolveTrade(id){
+  var idx=-1;
+  for(var i=0;i<trades.length;i++)if(trades[i].id===id){idx=i;break;}
+  if(idx<0)return;
+  var t=trades[idx],s=lSettings(),u=getUser(),win=false;
+  if(s.forceMode==='alwaysWin')win=true;
+  else if(s.forceMode==='alwaysLose')win=false;
+  else{
+    var uwr=s.winRate;
+    if(u.customWinRate!==undefined&&u.customWinRate!==null)uwr=u.customWinRate;
+    u.streakData=u.streakData||{wins:0,losses:0};
+    if(u.streakData.wins>=s.maxWinStreak){win=false;u.streakData.wins=0;u.streakData.losses=1;}
+    else if(u.streakData.losses>=s.maxLoseStreak){win=true;u.streakData.wins=1;u.streakData.losses=0;}
+    else{
+      var rand=Math.random()*100;
+      win=rand<uwr;
+      if(win){u.streakData.wins++;u.streakData.losses=0;}
+      else{u.streakData.wins=0;u.streakData.losses++;}
+    }
+    var isCall=t.side==='call',shouldUp=win?isCall:(!isCall);
+    var offset=curAsset.vol*0.08,lc=candles[candles.length-1];
+    if(shouldUp&&price<=t.entry){price=t.entry+offset;lc.c=price;lc.h=Math.max(lc.h,price);lc.l=Math.min(lc.l,price);dirty=true;}
+    else if(!shouldUp&&price>=t.entry){price=t.entry-offset;lc.c=price;lc.h=Math.max(lc.h,price);lc.l=Math.min(lc.l,price);dirty=true;}
+  }
+  var payout=win?t.amount*(1+t.payout/100):0;
+  trades.splice(idx,1);
+  if(t.isDemo)u.demoBalance=(u.demoBalance||0)+payout;
+  else u.realBalance=(u.realBalance||0)+payout;
+  u.activeTrades=trades;
+  u.history=u.history||[];
+  u.history.push({type:'trade',side:t.side,amount:t.amount,entry:t.entry,exit:price,win:win,asset:t.asset,duration:t.duration,payout:t.payout,isDemo:t.isDemo,time:Date.now()});
+  if(u.history.length>200)u.history=u.history.slice(-200);
+  saveCur(u);
+  updateBalUI();renderActiveList();dirty=true;updatePool();
+  toast(win?'🎉 +$'+(t.amount*(1+t.payout/100)).toFixed(2):'❌ -$'+t.amount,win?'ok':'err');
+}
+function renderActiveList(){
+  var n=trades.length,panel=$('activeList');
+  if(!panel)return;
+  if(n===0){panel.classList.remove('on');$('navBadge').classList.remove('on');return;}
+  panel.classList.add('on');
+  $('navBadge').classList.add('on');
+  $('navBadge').textContent=n;
+  var html='',tot=0,now=Date.now();
+  for(var i=0;i<trades.length;i++){
+    var t=trades[i];tot+=t.amount;
+    var rem=(t._rem!==undefined)?t._rem:Math.max(0,Math.floor((t.expiry-now)/1000));
+    var hh=Math.floor(rem/3600),mm=Math.floor((rem%3600)/60),ss=rem%60;
+    var ts=(hh>0?(hh<10?'0':'')+hh+':':'')+(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss;
+    html+='<div class="al-item '+(t.side==='call'?'call':'put')+'"><div class="al-side '+(t.side==='call'?'call':'put')+'">'+(t.side==='call'?'▲':'▼')+'</div><div class="al-info"><div class="r1">$'+t.amount+' '+esc(t.asset)+' '+(t.isDemo?'<span style="color:#10b981;font-size:9px">DEMO</span>':'<span style="color:#f59e0b;font-size:9px">REAL</span>')+'</div><div class="r2">'+t.entry.toFixed(curAsset.dp)+'</div></div><div class="al-time">'+ts+'</div></div>';
+  }
+  $('activeItems').innerHTML=html;
+  $('activeN').textContent=n;
+  $('activeTot').textContent=tot.toFixed(2);
+}
+
+var DURS=[
+  {sec:60,label:'1 min',short:'00:01:00'},
+  {sec:300,label:'5 min',short:'00:05:00'},
+  {sec:600,label:'10 min',short:'00:10:00'},
+  {sec:900,label:'15 min',short:'00:15:00'},
+  {sec:1800,label:'30 min',short:'00:30:00'},
+  {sec:3600,label:'1 hour',short:'01:00:00'},
+  {sec:10800,label:'3 hours',short:'03:00:00'}
+];
+var _modal=null;
+function openModal(html,cb){
+  if(!_modal){
+    _modal=document.createElement('div');
+    _modal.className='modal';
+    _modal.addEventListener('click',function(e){if(e.target===_modal)closeModal();});
+    document.body.appendChild(_modal);
+  }
+  _modal.innerHTML='<div class="modal-box">'+html+'</div>';
+  _modal.classList.add('on');
+  if(cb)cb(_modal.querySelector('.modal-box'));
+}
+function closeModal(){if(_modal)_modal.classList.remove('on');}
+function openDurModal(){
+  var s=lSettings();
+  var html='<div class="modal-handle"></div><div class="modal-title">⏱️ Duration</div>';
+  for(var i=0;i<DURS.length;i++){
+    var d=DURS[i];
+    var pct=s.payoutByDuration&&s.payoutByDuration[d.sec]?s.payoutByDuration[d.sec]:(d.sec===60?curAsset.p1:d.sec===300?curAsset.p5:(curAsset.p1+2));
+    html+='<div class="dur-row" data-sec="'+d.sec+'"><span class="nm">'+d.label+'</span><span class="pc">+'+pct+'%</span></div>';
+  }
+  openModal(html,function(m){
+    var rows=m.querySelectorAll('[data-sec]');
+    for(var i=0;i<rows.length;i++)rows[i].onclick=function(){
+      var sec=parseInt(this.dataset.sec);
+      for(var j=0;j<DURS.length;j++)if(DURS[j].sec===sec){curDur=DURS[j];break;}
+      $('durVal').textContent=curDur.short;
+      updatePayouts();closeModal();
+    };
+  });
+}
+function openAmtModal(){
+  var s=lSettings();
+  var quick=[1,5,10,25,50,100,250,500,1000];
+  var html='<div class="modal-handle"></div><div class="modal-title">💵 Amount</div>';
+  html+='<label class="f-label">Custom ($)</label><input class="f-input" id="amtIn" type="number" value="'+curAmt+'" min="1" max="'+s.maxTrade+'">';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">';
+  for(var i=0;i<quick.length;i++)html+='<button class="m-btn edt" style="padding:11px;font-size:13px" data-amt="'+quick[i]+'">$'+quick[i]+'</button>';
+  html+='</div><button class="btn-primary" id="saveAmt">Save</button>';
+  openModal(html,function(m){
+    var btns=m.querySelectorAll('[data-amt]');
+    for(var i=0;i<btns.length;i++)btns[i].onclick=function(){m.querySelector('#amtIn').value=this.dataset.amt;};
+    m.querySelector('#saveAmt').onclick=function(){
+      var v=parseFloat(m.querySelector('#amtIn').value);
+      if(!v||v<1){toast('Invalid','err');return;}
+      if(v>s.maxTrade){toast('Max $'+s.maxTrade,'err');return;}
+      curAmt=v;$('amtVal').textContent=v;updatePayouts();closeModal();
+    };
+  });
+}
+function toggleMarket(){buildCandles();dirty=true;toast('🔄 Refreshed');}
+
+var trTab='open';
+function switchTab(t){
+  trTab=t;
+  $('tabOpen').classList.toggle('on',t==='open');
+  $('tabClosed').classList.toggle('on',t==='closed');
+  renderTrades();
+}
+function renderTrades(){
+  var u=getUser();if(!u)return;
+  var body=$('tradesBody'),html='';
+  if(trTab==='open'){
+    if(!trades.length){body.innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8">No open trades</div>';return;}
+    var now=Date.now();
+    for(var i=0;i<trades.length;i++){
+      var t=trades[i],rem=Math.max(0,Math.floor((t.expiry-now)/1000));
+      var hh=Math.floor(rem/3600),mm=Math.floor((rem%3600)/60),ss=rem%60;
+      var ts=(hh>0?(hh<10?'0':'')+hh+':':'')+(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss;
+      html+='<div class="tr-row"><div><div class="nm">⭐ '+esc(t.asset)+'</div><div class="sub">'+t.duration/60+' min</div></div><div class="amt">$'+t.amount+'</div><div class="rt">'+ts+'</div></div>';
+    }
+  }else{
+    var hist=(u.history||[]).filter(function(h){return h.type==='trade';});
+    if(!hist.length){body.innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8">No closed trades</div>';return;}
+    for(var j=hist.length-1;j>=0;j--){
+      var h=hist[j],dt=new Date(h.time);
+      var time=('0'+dt.getHours()).slice(-2)+':'+('0'+dt.getMinutes()).slice(-2);
+      var prof=h.win?'+$'+(h.amount*(1+h.payout/100)).toFixed(2):'-$'+h.amount.toFixed(2);
+      html+='<div class="tr-row"><div><div class="nm">⭐ '+esc(h.asset)+' <b>+'+h.payout+'%</b></div><div class="sub">'+(h.side==='call'?'↗':'↘')+' $'+h.amount+' • '+time+'</div></div><div class="rt '+(h.win?'win':'lose')+'">'+prof+'</div></div>';
+    }
+  }
+  body.innerHTML=html;
+}
+function renderSocial(){
+  var us=lUsers(),arr=[];
+  for(var name in us){
+    var u=us[name];
+    if(u.blocked)continue;
+    var hist=(u.history||[]).filter(function(h){return h.type==='trade';});
+    var wins=0,profit=0;
+    for(var i=0;i<hist.length;i++){if(hist[i].win){wins++;profit+=hist[i].amount*(hist[i].payout/100);}else profit-=hist[i].amount;}
+    arr.push({name:name,trades:hist.length,pct:hist.length?Math.round(wins/hist.length*100):0,profit:profit});
+  }
+  arr.sort(function(a,b){return b.profit-a.profit;});
+  arr=arr.slice(0,15);
+  if(!arr.length){$('socialBody').innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8">No traders</div>';return;}
+  var html='';
+  for(var k=0;k<arr.length;k++){
+    var t2=arr[k];
+    var grad=k===0?'linear-gradient(135deg,#fbbf24,#f59e0b)':k===1?'linear-gradient(135deg,#e0e0e0,#8b949e)':k===2?'linear-gradient(135deg,#cd7f32,#a0522d)':'linear-gradient(135deg,#3b82f6,#60a5fa)';
+    html+='<div class="soc-row"><div class="soc-av" style="background:'+grad+'">'+(k===0?'👑':'')+esc(t2.name[0].toUpperCase())+'</div><div class="soc-info"><div class="nm">'+esc(t2.name)+'</div><div class="mt">Trades: <b>'+t2.trades+'</b> • Win: <b>'+t2.pct+'%</b></div></div><div class="soc-profit"><div class="pr" style="color:'+(t2.profit>=0?'#10b981':'#ef4444')+'">'+(t2.profit>=0?'+':'')+'$'+t2.profit.toFixed(2)+'</div></div></div>';
+  }
+  $('socialBody').innerHTML=html;
+}
+function showTradeAnalytics(){
+  var u=getUser();if(!u||!u.history)return;
+  var tr=u.history.filter(function(h){return h.type==='trade';});
+  if(!tr.length){toast('No trades','err');return;}
+  var wins=0,losses=0,tp=0,tl=0;
+  for(var i=0;i<tr.length;i++){if(tr[i].win){wins++;tp+=tr[i].amount*(tr[i].payout/100);}else{losses++;tl+=tr[i].amount;}}
+  var wr=Math.round(wins/tr.length*100),net=tp-tl;
+  var html='<div class="modal-handle"></div><div class="modal-title">📊 Analytics</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
+  html+='<div style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.4);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:900;color:#10b981">'+wr+'%</div><div style="font-size:10px;color:#94a3b8;font-weight:800">WIN RATE</div></div>';
+  html+='<div style="background:'+(net>=0?'rgba(16,185,129,.1)':'rgba(239,68,68,.1)')+';border:1px solid '+(net>=0?'rgba(16,185,129,.4)':'rgba(239,68,68,.4)')+';border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:900;color:'+(net>=0?'#10b981':'#ef4444')+'">'+(net>=0?'+':'')+'$'+net.toFixed(2)+'</div><div style="font-size:10px;color:#94a3b8;font-weight:800">NET P/L</div></div>';
+  html+='</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px">';
+  html+='<div style="background:rgba(30,41,59,.55);border-radius:9px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:900;color:#fff">'+wins+'</div><div style="font-size:9px;color:#94a3b8">WINS</div></div>';
+  html+='<div style="background:rgba(30,41,59,.55);border-radius:9px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:900;color:#fff">'+losses+'</div><div style="font-size:9px;color:#94a3b8">LOSSES</div></div>';
+  html+='<div style="background:rgba(30,41,59,.55);border-radius:9px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:900;color:#fff">'+tr.length+'</div><div style="font-size:9px;color:#94a3b8">TOTAL</div></div>';
+  html+='</div>';
+  html+='<button class="btn-primary" id="closeAnalytics">Close</button>';
+  openModal(html,function(m){m.querySelector('#closeAnalytics').onclick=closeModal;});
+}
+
+function renderDeposit(){
+  var s=lSettings(),me=getUser();
+  var enabled=s.methods.filter(function(m){return m.enabled;});
+  if(me.lockedMethod)enabled=enabled.filter(function(m){return m.id===me.lockedMethod;});
+  var html='';
+  if(me.lockedMethod)html+='<div class="info-box gold">🔒 Method Locked: <b>'+esc(me.lockedMethodName||me.lockedMethod)+'</b></div>';
+  if(!enabled.length)html+='<div class="info-box red">⚠️ কোনো method নেই</div>';
+  for(var i=0;i<enabled.length;i++){
+    var p=enabled[i];
+    var logoHtml=p.logoUrl?'<img src="'+esc(p.logoUrl)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':esc(p.logo);
+    html+='<div class="pm-card" data-pm="'+esc(p.id)+'"><div class="pm-top"><div class="pm-logo" style="background:'+esc(p.color)+'">'+logoHtml+'</div><div><div class="pm-name">'+esc(p.name)+'</div></div></div><div class="pm-meta"><span>Min: <b>$'+p.min+'</b></span><span>'+esc(p.time)+'</span></div></div>';
+  }
+  $('depList').innerHTML=html;
+  var cards=document.querySelectorAll('#depList [data-pm]');
+  for(var j=0;j<cards.length;j++)cards[j].onclick=function(){openDepSheet(this.dataset.pm);};
+}
+function openDepSheet(id){
+  var s=lSettings(),m=null;
+  for(var i=0;i<s.methods.length;i++)if(s.methods[i].id===id){m=s.methods[i];break;}
+  if(!m)return;
+  var me=getUser();
+  var br=s.bonusRate||50,bonusMin=s.bonusMinDep||50;
+  var html='<div class="modal-handle"></div><div class="modal-title">Deposit — '+esc(m.name)+'</div>';
+  html+='<div class="info-box gold">🎁 <b>'+br+'% bonus</b> (min $'+bonusMin+')</div>';
+  html+='<div class="info-box"><b>📱 Send to:</b><br><b style="font-family:monospace;cursor:pointer" id="cpN">'+esc(m.number)+'</b></div>';
+  html+='<label class="f-label">Your Number</label><input class="f-input" id="dpN">';
+  html+='<label class="f-label">Amount ($)</label><input class="f-input" id="dpA" type="number">';
+  html+='<div id="bpv" style="background:rgba(245,158,11,.1);border:1px dashed rgba(245,158,11,.4);border-radius:10px;padding:10px;font-size:12px;margin-bottom:12px;color:#ffe4a3;text-align:center">🎁 Bonus: <b>$0.00</b></div>';
+  html+='<label class="f-label">TrxID</label><input class="f-input" id="dpT">';
+  html+='<button class="btn-primary" id="dpS">Submit</button><button class="btn-close" id="dpC">Cancel</button>';
+  openModal(html,function(md){
+    var cp=md.querySelector('#cpN');
+    if(cp)cp.onclick=function(){if(navigator.clipboard)navigator.clipboard.writeText(m.number);toast('Copied');};
+    md.querySelector('#dpC').onclick=closeModal;
+    md.querySelector('#dpA').oninput=function(){
+      var v=parseFloat(this.value)||0;
+      var b=v>=bonusMin?(v*br/100):0;
+      md.querySelector('#bpv').innerHTML=v>=bonusMin?'🎁 Bonus: <b>$'+b.toFixed(2)+'</b> • Total: <b style="color:#10b981">$'+(v+b).toFixed(2)+'</b>':'⚠️ $'+bonusMin+'+';
+    };
+    md.querySelector('#dpS').onclick=function(){
+      var num=md.querySelector('#dpN').value.trim();
+      var amt=parseFloat(md.querySelector('#dpA').value);
+      var trx=md.querySelector('#dpT').value.trim();
+      if(!num||num.length<6){toast('Number','err');return;}
+      if(!amt||amt<m.min){toast('Min $'+m.min,'err');return;}
+      if(!trx||trx.length<3){toast('TrxID','err');return;}
+      var u=getUser();
+      var bonusAmt=amt>=bonusMin?(amt*br/100):0;
+      if(!u.lockedMethod){u.lockedMethod=m.id;u.lockedMethodName=m.name;}
+      u.pendingDeps=u.pendingDeps||[];
+      u.pendingDeps.push({id:'dep_'+Date.now(),method:m.name,methodId:m.id,number:num,amount:amt,bonusAmount:bonusAmt,trx:trx,status:'pending',mode:'self',agent:null,time:Date.now()});
+      saveCur(u);
+      closeModal();
+      toast('✅ Submitted','gold');
+      show('mainScreen');
+    };
+  });
+}
+
+var wdM=null;
+function updateWdBal(){
+  var u=getUser();if(!u)return;
+  $('wdDemo').textContent=(u.demoBalance||0).toFixed(2);
+  $('wdReal').textContent=(u.realBalance||0).toFixed(2);
+}
+function renderWdList(){
+  var s=lSettings(),me=getUser();
+  var list=s.methods.filter(function(m){return m.enabled;});
+  if(me.lockedMethod)list=list.filter(function(m){return m.id===me.lockedMethod;});
+  var html='';
+  if(me.lockedMethod)html+='<div class="info-box gold">🔒 Locked: <b>'+esc(me.lockedMethodName||me.lockedMethod)+'</b></div>';
+  if(!list.length)html+='<div class="info-box red">⚠️ কোনো method নেই</div>';
+  for(var i=0;i<list.length;i++){
+    var p=list[i];
+    var logoHtml=p.logoUrl?'<img src="'+esc(p.logoUrl)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':esc(p.logo);
+    html+='<div class="pm-card" data-pm="'+esc(p.id)+'"><div class="pm-top"><div class="pm-logo" style="background:'+esc(p.color)+'">'+logoHtml+'</div><div><div class="pm-name">'+esc(p.name)+'</div></div></div><div class="pm-meta"><span>Min: <b>$'+p.min+'</b></span><span>'+esc(p.time)+'</span></div></div>';
+  }
+  $('wdList').innerHTML=html;
+  var cards=$('wdList').querySelectorAll('[data-pm]');
+  for(var k=0;k<cards.length;k++)cards[k].onclick=function(){
+    var id=this.dataset.pm;
+    for(var m=0;m<s.methods.length;m++)if(s.methods[m].id===id){wdM=s.methods[m];break;}
+    var all=$('wdList').querySelectorAll('.pm-card');
+    for(var n=0;n<all.length;n++)all[n].style.borderColor='';
+    this.style.borderColor='#3b82f6';
+  };
+}
+function submitWithdraw(){
+  var s=lSettings();
+  if(!wdM){toast('Method select','err');return;}
+  var num=$('wdNum').value.trim(),amt=parseFloat($('wdAmt').value);
+  var u=getUser();
+  if(!num||num.length<6){toast('Number','err');return;}
+  if(!amt||amt<s.minWithdraw){toast('Min $'+s.minWithdraw,'err');return;}
+  var real=u.realBalance||0,ab=u.activeBonus||0;
+  var deduct=s.autoDeductBonus&&ab>0;
+  var newReal=deduct?(real-ab):real;
+  if(amt>newReal){toast('❌ Withdrawable: $'+newReal.toFixed(2),'err');return;}
+  if(!u.lockedMethod){u.lockedMethod=wdM.id;u.lockedMethodName=wdM.name;}
+  if(deduct){u.realBalance=real-ab-amt;u.activeBonus=0;}
+  else u.realBalance=real-amt;
+  u.pendingWds=u.pendingWds||[];
+  u.pendingWds.push({id:'wd_'+Date.now(),method:wdM.name,methodId:wdM.id,number:num,amount:amt,status:'pending',mode:'self',agent:null,bonusDeducted:deduct?ab:0,time:Date.now()});
+  saveCur(u);
+  updateBalUI();updateWdBal();
+  toast('✅ Requested'+(deduct?' (bonus cut)':''),'gold');
+  $('wdNum').value='';$('wdAmt').value='';wdM=null;
+  show('mainScreen');
+}
+
+function renderHistory(){
+  var u=getUser();if(!u)return;
+  var items=[],hist=u.history||[];
+  for(var i=hist.length-1;i>=0;i--){var h=hist[i];if(h.type==='trade')items.push({time:h.time,title:(h.side==='call'?'▲ CALL':'▼ PUT')+' $'+h.amount+' • '+esc(h.asset),amount:h.win?'+$'+(h.amount*(1+h.payout/100)).toFixed(2):'-$'+h.amount,win:h.win});}
+  var dps=u.pendingDeps||[];
+  for(var j=dps.length-1;j>=0;j--){var dd=dps[j];items.push({time:dd.time,title:'💰 Deposit $'+dd.amount,amount:dd.status,pend:true});}
+  var wds=u.pendingWds||[];
+  for(var k=wds.length-1;k>=0;k--){var ww=wds[k];items.push({time:ww.time,title:'💸 Withdraw $'+ww.amount,amount:ww.status,pend:true});}
+  if(!items.length){$('historyBody').innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8">No history</div>';return;}
+  var html='';
+  for(var m=0;m<items.length;m++){
+    var it=items[m],color=it.pend?(it.amount==='approved'?'#10b981':it.amount==='rejected'?'#ef4444':'#f59e0b'):(it.win?'#10b981':'#ef4444');
+    html+='<div class="tr-row"><div><div class="nm">'+it.title+'</div><div class="sub">'+new Date(it.time).toLocaleString('en-GB')+'</div></div><div class="rt" style="color:'+color+'">'+it.amount+'</div></div>';
+  }
+  $('historyBody').innerHTML=html;
+}
+function renderNotifs(){
+  var u=getUser();if(!u)return;
+  var nn=u.notifications||[];
+  if(!nn.length){$('notifsBody').innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8">No notifications</div>';return;}
+  var html='';
+  for(var i=0;i<Math.min(nn.length,50);i++){
+    var n=nn[i];
+    html+='<div class="req" style="border-left-color:'+(n.read?'#1e3050':'#3b82f6')+'"><div class="req-r"><span class="k">🔔 '+esc(n.title||'')+'</span><span class="v" style="font-size:10px">'+new Date(n.time).toLocaleString('en-GB')+'</span></div><div style="font-size:12px;color:#94a3b8;margin-top:6px">'+esc(n.msg||'')+'</div></div>';
+  }
+  $('notifsBody').innerHTML=html;
+  for(var j=0;j<nn.length;j++)nn[j].read=true;
+  u.notifications=nn;
+  saveCur(u);
+  updateNotifBadge();
+}
+function updateNotifBadge(){
+  var u=getUser();if(!u)return;
+  var nn=u.notifications||[];
+  var un=nn.filter(function(n){return !n.read;}).length;
+  var b=$('notifBadge');
+  if(un>0){b.textContent=un;b.classList.add('on');}else b.classList.remove('on');
+}
+function changePassword(){
+  var u=getUser();
+  var old=$('cpOld').value,nw=$('cpNew').value,nw2=$('cpNew2').value;
+  $('cpErr').textContent='';
+  if(!verifyPassword(old,u.password)){$('cpErr').textContent='⚠️ Current password ভুল';return;}
+  if(!isStrongPassword(nw)){$('cpErr').textContent='⚠️ Strong password দিন';return;}
+  if(nw!==nw2){$('cpErr').textContent='⚠️ মিলছে না';return;}
+  u.password=hashPassword(nw);
+  saveCur(u);
+  toast('✅ Password updated');
+  $('cpOld').value='';$('cpNew').value='';$('cpNew2').value='';
+  setTimeout(function(){show('mainScreen');},800);
+}
+function openSmenu(){$('mask').classList.add('on');$('smenu').classList.add('on');document.body.style.overflow='hidden';}
+function closeSmenu(){$('mask').classList.remove('on');$('smenu').classList.remove('on');document.body.style.overflow='';}
+
+/* ADMIN PANEL */
+var admTab='users';
+function setAT(t){
+  admTab=t;
+  var ids=['atU','atD','atW','atS'];
+  for(var i=0;i<ids.length;i++){var e=$(ids[i]);if(e)e.classList.remove('on');}
+  var map={users:'atU',deps:'atD',wds:'atW',set:'atS'};
+  if(map[t]&&$(map[t]))$(map[t]).classList.add('on');
+  renderAdmin();
+}
+function renderAdmin(){
+  var us=lUsers(),list=[];
+  for(var k in us)list.push(us[k]);
+  $('stUsers').textContent=list.length;
+  $('stBlk').textContent=list.filter(function(u){return u.blocked;}).length;
+  var pd=0;
+  for(var k2 in us){var u=us[k2];if(u.pendingDeps)for(var i=0;i<u.pendingDeps.length;i++)if(u.pendingDeps[i].status==='pending')pd++;}
+  $('stDep').textContent=pd;
+  if(admTab==='users')admUsers();
+  else if(admTab==='deps')admDeps();
+  else if(admTab==='wds')admWds();
+  else admSet();
+}
+function admUsers(){
+  var us=lUsers(),names=[];
+  for(var n in us)names.push(n);
+  names.sort(function(a,b){return (us[b].realBalance||0)-(us[a].realBalance||0);});
+  if(!names.length){$('adminBody').innerHTML='<div style="text-align:center;padding:40px;color:#8fa3c2">No users</div>';return;}
+  var html='';
+  for(var i=0;i<names.length;i++){
+    var name=names[i],u=us[name];
+    var demo=u.demoBalance||0,real=u.realBalance||0;
+    var blockedTag=u.blocked?' <span style="background:#f23645;color:#fff;font-size:8px;padding:2px 6px;border-radius:4px">BLOCKED</span>':'';
+    html+='<div class="u-row'+(u.blocked?' blocked':'')+'"><div class="u-av'+(u.blocked?' blk':'')+'">'+esc(name[0].toUpperCase())+'</div><div style="flex:1;min-width:0"><div class="u-nm">'+esc(name)+blockedTag+'</div><div class="u-mt">🎮 $'+demo.toFixed(2)+' • 💎 $'+real.toFixed(2)+'<br>'+esc(u.email||'no email')+'</div></div><div class="u-act"><div class="u-act-row"><button class="m-btn edt" data-u="'+esc(name)+'" data-a="edit">💰</button><button class="m-btn '+(u.blocked?'ublk':'blk')+'" data-u="'+esc(name)+'" data-a="'+(u.blocked?'unblock':'block')+'">'+(u.blocked?'✓':'🚫')+'</button></div></div></div>';
+  }
+  $('adminBody').innerHTML=html;
+  var btns=$('adminBody').querySelectorAll('[data-a]');
+  for(var b=0;b<btns.length;b++)btns[b].onclick=function(){
+    var name=this.dataset.u,act=this.dataset.a;
+    if(act==='block'){
+      var us2=lUsers();
+      us2[name].blocked=true;
+      us2[name].blockedAt=Date.now();
+      sUsers(us2);
+      logAudit('BLOCK',name);
+      toast('🚫 Blocked');renderAdmin();
+    }else if(act==='unblock'){
+      var us2=lUsers();
+      us2[name].blocked=false;
+      sUsers(us2);
+      logAudit('UNBLOCK',name);
+      toast('✅ Unblocked');renderAdmin();
+    }else if(act==='edit')editBal(name);
+  };
+}
+function editBal(name){
+  var us=lUsers(),u=us[name];
+  var html='<div class="modal-handle"></div><div class="modal-title">💰 Edit — '+esc(name)+'</div>';
+  html+='<label class="f-label">Demo ($)</label><input class="f-input" id="nD" type="number" value="'+(u.demoBalance||0).toFixed(2)+'">';
+  html+='<label class="f-label">Real ($)</label><input class="f-input" id="nR" type="number" value="'+(u.realBalance||0).toFixed(2)+'">';
+  html+='<label class="f-label">Bonus ($)</label><input class="f-input" id="nB" type="number" value="'+(u.activeBonus||0).toFixed(2)+'">';
+  html+='<button class="btn-primary" id="sv">💾 Save</button>';
+  openModal(html,function(m){
+    m.querySelector('#sv').onclick=function(){
+      var d=parseFloat(m.querySelector('#nD').value)||0;
+      var r=parseFloat(m.querySelector('#nR').value)||0;
+      var b=parseFloat(m.querySelector('#nB').value)||0;
+      var us2=lUsers();
+      us2[name].demoBalance=d;
+      us2[name].realBalance=r;
+      us2[name].activeBonus=b;
+      sUsers(us2);
+      toast('✅ Saved');
+      closeModal();renderAdmin();
+    };
+  });
+}
+function admDeps(){
+  var us=lUsers(),all=[];
+  for(var n in us){
+    var u=us[n];
+    if(u.pendingDeps)for(var i=0;i<u.pendingDeps.length;i++){
+      var d=u.pendingDeps[i];
+      all.push({id:d.id,user:n,method:d.method,number:d.number,amount:d.amount,bonusAmount:d.bonusAmount||0,trx:d.trx,status:d.status,time:d.time});
+    }
+  }
+  all.sort(function(a,b){return b.time-a.time;});
+  if(!all.length){$('adminBody').innerHTML='<div style="text-align:center;padding:40px;color:#8fa3c2">No deposits</div>';return;}
+  var html='';
+  for(var j=0;j<all.length;j++){
+    var d=all[j],cls=d.status==='approved'?'apr':d.status==='rejected'?'rej':'';
+    html+='<div class="req '+cls+'">';
+    html+='<div class="req-r"><span class="k">👤</span><span class="v">'+esc(d.user)+'</span></div>';
+    html+='<div class="req-r"><span class="k">💳</span><span class="v">'+esc(d.method)+'</span></div>';
+    html+='<div class="req-r"><span class="k">💰</span><span class="v" style="color:#00c853">$'+d.amount+'</span></div>';
+    html+='<div class="req-r"><span class="k">🔖</span><span class="v" style="font-family:monospace">'+esc(d.trx)+'</span></div>';
+    html+='<div class="req-r"><span class="k">📌</span><span class="v" style="color:'+(d.status==='approved'?'#00c853':d.status==='rejected'?'#f23645':'#ffb300')+'">'+d.status.toUpperCase()+'</span></div>';
+    if(d.status==='pending')
+      html+='<div style="display:flex;gap:8px;margin-top:10px"><button class="m-btn apr" data-dep-u="'+esc(d.user)+'" data-dep-id="'+esc(d.id)+'" data-dep-a="approve">✅ Approve</button><button class="m-btn rej" data-dep-u="'+esc(d.user)+'" data-dep-id="'+esc(d.id)+'" data-dep-a="reject">❌ Reject</button></div>';
+    html+='</div>';
+  }
+  $('adminBody').innerHTML=html;
+  var btns=$('adminBody').querySelectorAll('[data-dep-a]');
+  for(var b=0;b<btns.length;b++)btns[b].onclick=function(){
+    adminDepAction(this.dataset.depU,this.dataset.depId,this.dataset.depA);
+  };
+}
+function adminDepAction(user,id,action){
+  var us=lUsers(),t=us[user];
+  if(!t)return;
+  var d=null;
+  for(var i=0;i<(t.pendingDeps||[]).length;i++)if(t.pendingDeps[i].id===id){d=t.pendingDeps[i];break;}
+  if(!d)return;
+  if(action==='approve'){
+    var amt=d.amount,bonus=d.bonusAmount||0,total=amt+bonus;
+    t.realBalance=(t.realBalance||0)+total;
+    if(bonus>0)t.activeBonus=(t.activeBonus||0)+bonus;
+    t.totalDeposited=(t.totalDeposited||0)+amt;
+    d.status='approved';
+    d.approvedAt=Date.now();
+    if(!t.lockedMethod){t.lockedMethod=d.methodId;t.lockedMethodName=d.method;}
+    sUsers(us);
+    logAudit('APPROVE_DEP',user,'$'+amt);
+    toast('✅ Approved $'+amt,'gold');
+  }else{
+    d.status='rejected';
+    sUsers(us);
+    logAudit('REJECT_DEP',user,'$'+d.amount);
+    toast('❌ Rejected','err');
+  }
+  admDeps();
+}
+function admWds(){
+  var us=lUsers(),all=[];
+  for(var n in us){
+    var u=us[n];
+    if(u.pendingWds)for(var i=0;i<u.pendingWds.length;i++){
+      var w=u.pendingWds[i];
+      all.push({id:w.id,user:n,method:w.method,number:w.number,amount:w.amount,status:w.status,bonusDeducted:w.bonusDeducted||0,time:w.time});
+    }
+  }
+  all.sort(function(a,b){return b.time-a.time;});
+  if(!all.length){$('adminBody').innerHTML='<div style="text-align:center;padding:40px;color:#8fa3c2">No withdrawals</div>';return;}
+  var html='';
+  for(var j=0;j<all.length;j++){
+    var w=all[j],cls=w.status==='approved'?'apr':w.status==='rejected'?'rej':'';
+    html+='<div class="req '+cls+'">';
+    html+='<div class="req-r"><span class="k">👤</span><span class="v">'+esc(w.user)+'</span></div>';
+    html+='<div class="req-r"><span class="k">💳</span><span class="v">'+esc(w.method)+'</span></div>';
+    html+='<div class="req-r"><span class="k">💰</span><span class="v" style="color:#f23645">$'+w.amount+'</span></div>';
+    html+='<div class="req-r"><span class="k">📌</span><span class="v" style="color:'+(w.status==='approved'?'#00c853':w.status==='rejected'?'#f23645':'#ffb300')+'">'+w.status.toUpperCase()+'</span></div>';
+    if(w.status==='pending')
+      html+='<div style="display:flex;gap:8px;margin-top:10px"><button class="m-btn apr" data-wd-u="'+esc(w.user)+'" data-wd-id="'+esc(w.id)+'" data-wd-a="approve">✅ Pay</button><button class="m-btn rej" data-wd-u="'+esc(w.user)+'" data-wd-id="'+esc(w.id)+'" data-wd-a="reject">❌ Reject</button></div>';
+    html+='</div>';
+  }
+  $('adminBody').innerHTML=html;
+  var btns=$('adminBody').querySelectorAll('[data-wd-a]');
+  for(var b=0;b<btns.length;b++)btns[b].onclick=function(){
+    adminWdAction(this.dataset.wdU,this.dataset.wdId,this.dataset.wdA);
+  };
+}
+function adminWdAction(user,id,action){
+  var us=lUsers(),t=us[user];
+  if(!t)return;
+  var w=null;
+  for(var i=0;i<(t.pendingWds||[]).length;i++)if(t.pendingWds[i].id===id){w=t.pendingWds[i];break;}
+  if(!w)return;
+  if(action==='approve'){
+    w.status='approved';
+    w.approvedAt=Date.now();
+    sUsers(us);
+    logAudit('APPROVE_WD',user,'$'+w.amount);
+    toast('✅ Paid $'+w.amount,'gold');
+  }else{
+    t.realBalance=(t.realBalance||0)+w.amount;
+    if(w.bonusDeducted)t.activeBonus=(t.activeBonus||0)+w.bonusDeducted;
+    w.status='rejected';
+    sUsers(us);
+    logAudit('REJECT_WD',user,'$'+w.amount);
+    toast('❌ Refunded','err');
+  }
+  admWds();
+}
+function admSet(){
+  var s=lSettings();
+  var html='';
+  html+='<div class="set-card"><div class="set-t">🎯 Global Win Rate</div><input type="range" min="0" max="100" value="'+s.winRate+'" class="slider" id="ws"><div class="sl-val" id="wv">'+s.winRate+'%</div></div>';
+  html+='<div class="set-card"><div class="set-t">🎲 Force Mode</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">';
+  html+='<button class="force-btn" data-mode="random" style="padding:10px;border-radius:8px;border:2px solid '+(s.forceMode==='random'?'#2d6fff':'rgba(42,63,95,.9)')+';background:'+(s.forceMode==='random'?'rgba(45,111,255,.2)':'rgba(22,38,61,.7)')+';color:#fff;font-weight:900;font-size:11px;cursor:pointer">🎲 Random</button>';
+  html+='<button class="force-btn" data-mode="alwaysWin" style="padding:10px;border-radius:8px;border:2px solid '+(s.forceMode==='alwaysWin'?'#00c853':'rgba(42,63,95,.9)')+';background:'+(s.forceMode==='alwaysWin'?'rgba(0,200,83,.2)':'rgba(22,38,61,.7)')+';color:#fff;font-weight:900;font-size:11px;cursor:pointer">✅ Win</button>';
+  html+='<button class="force-btn" data-mode="alwaysLose" style="padding:10px;border-radius:8px;border:2px solid '+(s.forceMode==='alwaysLose'?'#f23645':'rgba(42,63,95,.9)')+';background:'+(s.forceMode==='alwaysLose'?'rgba(242,54,69,.2)':'rgba(22,38,61,.7)')+';color:#fff;font-weight:900;font-size:11px;cursor:pointer">❌ Lose</button>';
+  html+='</div></div>';
+  html+='<div class="set-card"><div class="set-t">💰 Payout by Duration</div>';
+  var durs=[{sec:60,lbl:'1 min'},{sec:300,lbl:'5 min'},{sec:600,lbl:'10 min'},{sec:900,lbl:'15 min'},{sec:1800,lbl:'30 min'},{sec:3600,lbl:'1 hr'},{sec:10800,lbl:'3 hr'}];
+  for(var i=0;i<durs.length;i++){
+    var d=durs[i],pct=(s.payoutByDuration&&s.payoutByDuration[d.sec])||85;
+    html+='<div class="set-row"><div class="lbl">'+d.lbl+'</div><input type="number" class="s-num payout-in" data-sec="'+d.sec+'" value="'+pct+'" min="50" max="99"></div>';
+  }
+  html+='</div>';
+  html+='<div class="set-card"><div class="set-t">🎁 Bonus</div><div class="set-row"><div class="lbl">Bonus %</div><input type="number" class="s-num" value="'+s.bonusRate+'" id="sBR"></div><div class="set-row"><div class="lbl">Bonus Min</div><input type="number" class="s-num" value="'+(s.bonusMinDep||50)+'" id="sBMin"></div><div class="set-row"><div class="lbl">Auto-deduct Bonus</div><label class="switch'+(s.autoDeductBonus?' on':'')+'" id="sAutoBonus"></label></div></div>';
+  html+='<div class="set-card"><div class="set-t">🔧 Limits</div><div class="set-row"><div class="lbl">Min Deposit</div><input type="number" class="s-num" value="'+s.minDeposit+'" id="sMinD"></div><div class="set-row"><div class="lbl">Min Withdraw</div><input type="number" class="s-num" value="'+s.minWithdraw+'" id="sMinW"></div><div class="set-row"><div class="lbl">Max Trade</div><input type="number" class="s-num" value="'+s.maxTrade+'" id="sMaxT"></div></div>';
+  html+='<button class="btn-primary" id="saveSet" style="margin-bottom:10px">💾 Save All</button>';
+  html+='<button class="btn-close" id="resetSet">🔄 Reset</button>';
+  $('adminBody').innerHTML=html;
+  var sl=$('ws'),wv=$('wv');
+  sl.oninput=function(){wv.textContent=this.value+'%';};
+  var fbs=$('adminBody').querySelectorAll('.force-btn');
+  var sel=s.forceMode||'random';
+  for(var f=0;f<fbs.length;f++)fbs[f].onclick=function(){
+    sel=this.dataset.mode;
+    for(var j=0;j<fbs.length;j++){fbs[j].style.borderColor='rgba(42,63,95,.9)';fbs[j].style.background='rgba(22,38,61,.7)';}
+    if(sel==='random'){this.style.borderColor='#2d6fff';this.style.background='rgba(45,111,255,.2)';}
+    else if(sel==='alwaysWin'){this.style.borderColor='#00c853';this.style.background='rgba(0,200,83,.2)';}
+    else{this.style.borderColor='#f23645';this.style.background='rgba(242,54,69,.2)';}
+  };
+  var ab=$('sAutoBonus');
+  if(ab)ab.onclick=function(){this.classList.toggle('on');};
+  $('saveSet').onclick=function(){
+    var n=Object.assign({},lSettings());
+    n.winRate=parseInt(sl.value);
+    n.forceMode=sel;
+    n.bonusRate=parseFloat($('sBR').value)||50;
+    n.bonusMinDep=parseFloat($('sBMin').value)||50;
+    n.minDeposit=parseFloat($('sMinD').value)||10;
+    n.minWithdraw=parseFloat($('sMinW').value)||10;
+    n.maxTrade=parseFloat($('sMaxT').value)||5000;
+    n.autoDeductBonus=$('sAutoBonus').classList.contains('on');
+    n.payoutByDuration=n.payoutByDuration||{};
+    var pis=$('adminBody').querySelectorAll('.payout-in');
+    for(var p=0;p<pis.length;p++){var sec=parseInt(pis[p].dataset.sec);n.payoutByDuration[sec]=parseInt(pis[p].value)||85;}
+    sSettings(n);
+    logAudit('SAVE_SETTINGS','admin','');
+    toast('✅ Saved!');
+    updatePayouts();
+  };
+  $('resetSet').onclick=function(){
+    if(!confirm('Reset all?'))return;
+    localStorage.removeItem(CK);
+    toast('✅ Reset');
+    admSet();
+  };
+}
+
+function syncAll(users){
+  if(!fdb)return;
+  try{
+    fdb.collection('tmn_users').doc('_bulk').set({data:users,updatedAt:Date.now()}).catch(function(){});
+    for(var n in users){
+      fdb.collection('tmn_users').doc(n).set(users[n]).catch(function(){});
+    }
+  }catch(e){}
+}
+function fbLoad(){
+  if(!fdb)return;
+  fdb.collection('tmn_users').doc('_bulk').get().then(function(doc){
+    if(doc.exists){
+      var data=doc.data().data;
+      if(data&&Object.keys(data).length>0){
+        var local=lUsers();
+        var merged=Object.assign({},local,data);
+        localStorage.setItem(UK,JSON.stringify(merged));
+      }
+    }
+  }).catch(function(){});
+}
+
+/* INIT */
+function initApp(){
+  if(localStorage.getItem(AK)==='1'){
+    isAdmin=true;curUser=null;
+    show('adminScreen');
+    setAT('users');
+    return;
+  }
+  var ss=localStorage.getItem(SK);
+  if(ss){
+    var us=lUsers();
+    if(us[ss]){
+      if(us[ss].blocked){showBlockedScreen(ss);return;}
+      loginUser(ss);
+      return;
+    }
+  }
+  show('welcomeScreen');
+  setTimeout(function(){
+    var p=$('rgPass');
+    if(p){
+      var dB=debounce(updatePwMeter,200);
+      p.addEventListener('input',dB);
+      $('rgPass2').addEventListener('input',dB);
+      $('rgUser').addEventListener('input',dB);
+      $('rgEmail').addEventListener('input',dB);
+    }
+  },100);
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',function(){initApp();setTimeout(fbLoad,500);});
+}else{
+  initApp();
+  setTimeout(fbLoad,500);
+}
+window.addEventListener('load',function(){
+  setTimeout(function(){if(location.hash==='#admin'&&!isAdmin)openAdminModal();},300);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var a=document.querySelector('.screen.active');
+    if(!a)return;
+    if(a.id==='loginScreen')doLogin();
+    else if(a.id==='registerScreen'){var btn=$('rgBtn');if(btn&&!btn.disabled)doRegister();}
+    else if(a.id==='adminModal')doAdminLogin();
+  }
+});
+console.log('%c🚀 TMN Broker v16','color:#3b82f6;font-size:20px;font-weight:bold');
+console.log('%cAdmin: Mridul / hcde5arvA#','color:#10b981;font-size:11px');
+</script>
+</body>
+</html>

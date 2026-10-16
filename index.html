@@ -1,0 +1,2514 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সিদরাতুল ইসলামী ব্যাংক — ক্লাউড</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --primary:#0d5c3f;--primary-light:#16a34a;--primary-glow:rgba(22,163,74,.35);
+  --accent:#d4af37;--accent-light:#f4d03f;
+  --bg-1:#0a1f17;--bg-2:#0f2d20;--bg-3:#132e22;
+  --surface:rgba(255,255,255,.06);--surface-2:rgba(255,255,255,.1);
+  --border:rgba(255,255,255,.12);--text:#e8f0ec;--text-dim:#9db3a8;
+  --danger:#ef4444;--warning:#f59e0b;--success:#22c55e;--info:#3b82f6;
+  --radius:18px;--radius-sm:12px;
+  --shadow:0 20px 60px rgba(0,0,0,.5);--shadow-glow:0 0 40px var(--primary-glow);
+}
+[data-theme="light"]{--bg-1:#f0f7f3;--bg-2:#e6f2ea;--bg-3:#dceadf;--surface:rgba(255,255,255,.85);--surface-2:rgba(255,255,255,.95);--border:rgba(13,92,63,.15);--text:#0a1f17;--text-dim:#4a6b5a;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,'Noto Sans Bengali',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg-1);background-image:radial-gradient(circle at 15% 10%,rgba(22,163,74,.15) 0,transparent 45%),radial-gradient(circle at 85% 90%,rgba(212,175,55,.12) 0,transparent 45%),radial-gradient(circle at 50% 50%,rgba(13,92,63,.25) 0,transparent 70%);min-height:100vh;color:var(--text);padding:12px;overflow-x:hidden}
+.bg-particles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.bg-particles span{position:absolute;width:3px;height:3px;background:var(--primary-light);border-radius:50%;opacity:.35;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.5}90%{opacity:.5}100%{transform:translateY(-100vh) scale(1.5);opacity:0}}
+.app{max-width:540px;margin:0 auto;position:relative;z-index:1;background:var(--surface);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.header{position:relative;padding:22px 20px 18px;background:linear-gradient(135deg,rgba(13,92,63,.9),rgba(22,163,74,.85));color:#fff;text-align:center;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 0%,rgba(212,175,55,.25),transparent 55%)}
+.header .logo{font-size:38px;filter:drop-shadow(0 4px 12px rgba(212,175,55,.5));animation:logoPulse 3s ease-in-out infinite;position:relative}
+@keyframes logoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.header h1{font-size:19px;font-weight:800;position:relative;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.header p{font-size:11px;opacity:.85;margin-top:3px;position:relative}
+.header .status-bar{display:flex;justify-content:center;gap:14px;margin-top:10px;position:relative;font-size:10px;opacity:.9}
+.header .status-bar .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:blink 2s infinite}
+.header .status-bar .cloud{display:inline-block;width:6px;height:6px;border-radius:50%;background:#60a5fa;box-shadow:0 0 8px #60a5fa;animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.3}}
+.theme-toggle{position:absolute;top:14px;right:14px;z-index:5;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);width:36px;height:36px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center}
+.tabs{display:flex;background:rgba(0,0,0,.15);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:80px;padding:14px 10px;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text-dim);white-space:nowrap;border-bottom:3px solid transparent;position:relative}
+.tab.active{color:var(--primary-light);border-bottom-color:var(--primary-light)}
+.tab.active::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:40%;height:3px;background:var(--accent);border-radius:3px;box-shadow:0 0 15px var(--accent)}
+.panel{padding:22px;display:none}
+.panel.active{display:block}
+label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin:10px 0 5px}
+input,select,textarea{width:100%;padding:13px 15px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);outline:none}
+input:focus,select:focus{border-color:var(--primary-light);box-shadow:0 0 0 4px var(--primary-glow)}
+input::placeholder{color:var(--text-dim);opacity:.6}
+select option{background:var(--bg-2);color:var(--text)}
+button{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-size:14.5px;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-light));box-shadow:0 8px 25px rgba(22,163,74,.35);transition:.25s;margin-top:10px}
+button:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(22,163,74,.5)}
+button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);box-shadow:0 8px 25px rgba(220,38,38,.35)}
+button.gold{background:linear-gradient(135deg,#b8860b,var(--accent-light));color:#1a1a1a;box-shadow:0 8px 25px rgba(212,175,55,.4)}
+button.ghost{background:transparent;border:1.5px solid var(--border);color:var(--text);box-shadow:none}
+button.ghost:hover{background:var(--surface-2)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0}
+.balance-hero{background:linear-gradient(135deg,rgba(13,92,63,.95),rgba(22,163,74,.85));border:1px solid rgba(212,175,55,.3);border-radius:var(--radius);padding:24px 20px;text-align:center;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-glow);margin-bottom:16px}
+.balance-hero::before{content:'';position:absolute;top:-40%;right:-30%;width:70%;height:180%;background:radial-gradient(circle,rgba(212,175,55,.3),transparent 60%)}
+.balance-hero .label{font-size:11.5px;opacity:.85;letter-spacing:1px;text-transform:uppercase;position:relative}
+.balance-hero .amount{font-size:38px;font-weight:800;margin:8px 0;position:relative;text-shadow:0 4px 15px rgba(0,0,0,.3)}
+.balance-hero .sub{font-size:12px;opacity:.9;position:relative}
+.balance-hero .chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:20px;font-size:11px;margin-top:12px;position:relative}
+.msg{padding:12px 15px;border-radius:var(--radius-sm);margin:10px 0;font-size:13px;display:none;font-weight:600;line-height:1.5}
+.msg.success{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);display:block}
+.msg.error{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);display:block}
+.msg.info{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);display:block}
+.msg.warning{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3);display:block}
+.tx-row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin:7px 0;font-size:13px;cursor:pointer}
+.tx-row .left{flex:1;min-width:0}
+.tx-row .left b{color:var(--primary-light);font-size:13px;display:block;margin-bottom:2px}
+.tx-row .left .time{font-size:10.5px;color:var(--text-dim);margin-top:2px}
+.tx-row .left .txid{font-family:monospace;font-size:10px;color:var(--accent-light);margin-top:2px;word-break:break-all}
+.tx-row .amount{font-weight:800;font-size:14px;white-space:nowrap;margin-left:8px}
+.tx-row .amount.in{color:#4ade80}
+.tx-row .amount.out{color:#f87171}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700}
+.badge.user{background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.badge.agent{background:rgba(212,175,55,.2);color:var(--accent-light);border:1px solid rgba(212,175,55,.3)}
+.badge.verified{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.badge.pending{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+.badge.blocked{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.badge.active{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.badge.nofa{background:rgba(148,163,184,.2);color:#cbd5e1;border:1px solid rgba(148,163,184,.3)}
+.badge.locked{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid rgba(245,158,11,.3);animation:lockPulse 1.5s infinite}
+@keyframes lockPulse{50%{box-shadow:0 0 15px rgba(245,158,11,.6)}}
+.badge.fd{background:linear-gradient(135deg,rgba(212,175,55,.3),rgba(244,208,63,.2));color:var(--accent-light);border:1px solid rgba(212,175,55,.4)}
+.badge.matured{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.badge.cancelled{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.upload-zone{position:relative;background:var(--surface-2);border:2px dashed var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;margin:6px 0;transition:.25s}
+.upload-zone:hover{border-color:var(--primary-light)}
+.upload-zone.has-file{border-style:solid;border-color:var(--success);background:rgba(34,197,94,.08)}
+.upload-zone .u-icon{font-size:32px;margin-bottom:8px;opacity:.7}
+.upload-zone .u-text{font-size:12.5px;color:var(--text-dim);font-weight:600}
+.upload-zone input[type="file"]{display:none}
+.upload-zone .preview{width:100%;max-height:180px;object-fit:contain;border-radius:10px;margin-top:8px;display:none}
+.upload-zone.has-file .preview{display:block}
+.upload-zone.has-file .u-icon,.upload-zone.has-file .u-text{display:none}
+.upload-zone .change-btn{display:none;font-size:11px;color:var(--primary-light);margin-top:6px;font-weight:700;cursor:pointer}
+.upload-zone.has-file .change-btn{display:inline-block}
+.otp-secret{font-family:'Courier New',monospace;font-size:13px;background:#0f172a;color:#4ade80;padding:12px;border-radius:10px;text-align:center;letter-spacing:2px;word-break:break-all;border:1px solid rgba(74,222,128,.3)}
+.sec-head{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--primary-light);margin:18px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.sec-head .ico{font-size:18px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+.stat .v{font-size:20px;font-weight:800;color:var(--primary-light)}
+.stat .l{font-size:10.5px;color:var(--text-dim);margin-top:3px;text-transform:uppercase}
+.admin-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.admin-bar button{flex:1;min-width:70px;padding:10px;font-size:11px;margin:0;background:var(--surface-2);color:var(--text);border:1px solid var(--border);box-shadow:none}
+.admin-bar button.active{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-color:transparent}
+#toastBox{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:calc(100% - 30px);max-width:400px}
+.toast{padding:13px 18px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:toastIn .4s;display:flex;align-items:center;gap:10px;pointer-events:auto}
+@keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+.toast.success{background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(22,163,74,.95))}
+.toast.error{background:linear-gradient(135deg,rgba(239,68,68,.95),rgba(185,28,28,.95))}
+.toast.info{background:linear-gradient(135deg,rgba(59,130,246,.95),rgba(29,78,216,.95))}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.modal-bg.show{display:flex}
+.modal{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:440px;width:100%;box-shadow:var(--shadow);max-height:92vh;overflow-y:auto}
+.modal h3{color:var(--primary-light);margin-bottom:12px;font-size:16px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.quick{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;position:relative}
+.quick .ic{font-size:22px;margin-bottom:5px}
+.quick .lb{font-size:10px;color:var(--text-dim);font-weight:600}
+.small{font-size:11px;color:var(--text-dim);line-height:1.5}
+.hidden{display:none!important}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row2>*{margin-top:0}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.user-detail-row{display:flex;gap:10px;padding:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin:8px 0;cursor:pointer}
+.user-detail-row .thumb{width:50px;height:50px;border-radius:8px;object-fit:cover;background:var(--bg-3);flex-shrink:0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px}
+.user-detail-row .info{flex:1;min-width:0;font-size:12px}
+.user-detail-row .info b{color:var(--primary-light);font-size:13px;display:block;margin-bottom:2px}
+.user-detail-row .info .line{color:var(--text-dim);font-size:11px;margin-top:2px}
+.verify-card{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:var(--radius-sm);padding:12px;margin:8px 0}
+.verify-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.verify-card .imgs{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}
+.verify-card .imgs img{width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border)}
+.tx-detail-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--border);font-size:12.5px}
+.tx-detail-line:last-child{border:none}
+.tx-detail-line .k{color:var(--text-dim);font-weight:600}
+.tx-detail-line .v{color:var(--text);font-weight:700;text-align:right;word-break:break-all;max-width:60%;margin-left:10px}
+.search-box{position:relative}
+.search-box input{padding-left:42px}
+.search-box .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.6}
+.search-type{display:flex;gap:5px;margin-bottom:8px}
+.search-type button{flex:1;padding:8px;font-size:11px;margin:0;background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border);box-shadow:none}
+.search-type button.active{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-color:transparent}
+.locked-banner{background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(185,28,28,.15));border:2px solid rgba(239,68,68,.4);border-radius:var(--radius);padding:18px;text-align:center;margin:12px 0}
+.locked-banner .big{font-size:40px;margin-bottom:8px;animation:shake .6s infinite}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.locked-banner h3{color:#f87171;margin-bottom:8px}
+.cc-display{background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(244,208,63,.1));border:2px solid rgba(212,175,55,.4);border-radius:var(--radius);padding:16px;text-align:center;margin:12px 0}
+.cc-display .num{font-size:28px;font-weight:800;color:var(--accent-light);letter-spacing:3px;margin:6px 0;font-family:monospace}
+.fd-card{background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(244,208,63,.08));border:1.5px solid rgba(212,175,55,.4);border-radius:var(--radius);padding:16px;margin:12px 0;position:relative;overflow:hidden}
+.fd-card::before{content:'💰';position:absolute;top:-15px;right:-15px;font-size:80px;opacity:.08}
+.fd-card .fd-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.fd-card .fd-amount{font-size:22px;font-weight:800;color:var(--accent-light)}
+.fd-card .fd-id{font-family:monospace;font-size:10px;color:var(--text-dim);word-break:break-all}
+.fd-card .fd-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.fd-card .fd-item{background:rgba(0,0,0,.2);padding:8px 10px;border-radius:10px}
+.fd-card .fd-item .lbl{font-size:9.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}
+.fd-card .fd-item .val{font-size:13px;font-weight:700;color:var(--text);margin-top:2px}
+.progress-bar{height:8px;background:rgba(0,0,0,.3);border-radius:10px;overflow:hidden;margin:10px 0 4px}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--primary-light),var(--accent));border-radius:10px}
+.fd-tabs{display:flex;gap:5px;margin:10px 0}
+.fd-tabs button{flex:1;padding:9px;font-size:11.5px;margin:0;background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border);box-shadow:none;border-radius:10px}
+.fd-tabs button.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#1a1a1a;border-color:transparent}
+.calculator-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin:10px 0}
+.calc-result{background:linear-gradient(135deg,rgba(13,92,63,.4),rgba(22,163,74,.3));border:1px solid rgba(22,163,74,.4);border-radius:12px;padding:14px;margin-top:10px;text-align:center}
+.calc-result .big{font-size:24px;font-weight:800;color:var(--accent-light)}
+.calc-result .lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px}
+.ref-hero{background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(29,78,216,.15));border:1.5px solid rgba(59,130,246,.4);border-radius:var(--radius);padding:18px;text-align:center;margin:12px 0;position:relative;overflow:hidden}
+.ref-hero::before{content:'🎁';position:absolute;top:-15px;right:-15px;font-size:80px;opacity:.1}
+.ref-code-box{background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(244,208,63,.1));border:2px dashed rgba(212,175,55,.6);border-radius:12px;padding:14px;text-align:center;margin:12px 0}
+.ref-code{font-family:'Courier New',monospace;font-size:22px;font-weight:800;color:var(--accent-light);letter-spacing:3px;margin:6px 0}
+.copy-btn{background:rgba(255,255,255,.1);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:11px;cursor:pointer;color:var(--text);margin-top:6px;width:auto}
+.ref-stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.ref-stat .item{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.ref-stat .item .num{font-size:20px;font-weight:800;color:var(--info)}
+.ref-stat .item .lbl{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.ref-list-item{background:var(--surface-2);border-left:4px solid var(--info);border-radius:10px;padding:10px 12px;margin:6px 0;font-size:12px}
+.ref-list-item.approved{border-left-color:var(--success)}
+.ref-list-item.rejected{border-left-color:var(--danger)}
+.ref-list-item.pending{border-left-color:var(--warning)}
+.ref-progress{background:rgba(0,0,0,.3);border-radius:10px;overflow:hidden;height:10px;margin:8px 0}
+.ref-progress .fill{height:100%;background:linear-gradient(90deg,var(--info),#60a5fa);border-radius:10px}
+.ref-info-banner{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(29,78,216,.1));border:1px solid rgba(59,130,246,.4);border-radius:12px;padding:12px;margin:12px 0;font-size:12px;color:#60a5fa}
+/* Loading screen */
+.loading-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0a1f17,#0f2d20);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#e8f0ec;transition:opacity .5s}
+.loading-screen.hide{opacity:0;pointer-events:none}
+.loading-screen .load-icon{font-size:60px;animation:logoPulse 1.5s ease-in-out infinite;margin-bottom:20px;filter:drop-shadow(0 0 30px rgba(212,175,55,.6))}
+.loading-screen .load-text{font-size:16px;font-weight:700;letter-spacing:1px;margin-bottom:6px}
+.loading-screen .load-sub{font-size:11px;opacity:.6}
+.loading-screen .spinner{width:40px;height:40px;border:3px solid rgba(22,163,74,.3);border-top-color:#16a34a;border-radius:50%;animation:spin 1s linear infinite;margin-top:20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:420px){.balance-hero .amount{font-size:30px}.header h1{font-size:16px}.row3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="load-icon">🕌</div>
+  <div class="load-text" id="loadText">সিদরাতুল ইসলামী ব্যাংক</div>
+  <div class="load-sub" id="loadSub">ক্লাউড থেকে ডেটা লোড হচ্ছে...</div>
+  <div class="spinner"></div>
+</div>
+
+<div class="bg-particles" id="particles"></div>
+<div id="toastBox"></div>
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="app" id="app">
+  <div class="header" id="mainHeader">
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    <div class="logo">🕌</div>
+    <h1 id="headerTitle">সিদরাতুল ইসলামী ব্যাংক</h1>
+    <p id="headerSub">বিশ্বস্ত ইসলামী ব্যাংকিং সেবা</p>
+    <div class="status-bar" id="statusBar">
+      <span><span class="dot"></span> সিস্টেম সক্রিয়</span>
+      <span><span class="cloud"></span> <span id="cloudStatus">ক্লাউড</span></span>
+      <span id="clockDisplay">--:--:--</span>
+    </div>
+  </div>
+
+  <div id="mainApp">
+    <div class="tabs">
+      <div class="tab active" data-tab="login">লগইন</div>
+      <div class="tab" data-tab="register">রেজিস্টার</div>
+      <div class="tab" data-tab="dashboard" style="display:none">হোম</div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="panel active" id="loginPanel">
+      <div id="loginMsg" class="msg"></div>
+      <div id="loginLockBanner"></div>
+      <label>📱 ফোন নাম্বার</label>
+      <input type="tel" id="loginPhone" placeholder="01XXXXXXXXX">
+      <label>🔒 পাসওয়ার্ড</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+      <label>🔐 Google Authenticator কোড</label>
+      <input type="text" id="loginOtp" placeholder="000000" maxlength="6" style="letter-spacing:8px;text-align:center;font-size:20px;font-weight:700">
+      <button onclick="login()">🚀 লগইন করুন</button>
+      <button class="ghost" onclick="openForgotPass()">🔑 পাসওয়ার্ড ভুলে গেছেন?</button>
+      <p class="small" style="text-align:center;margin-top:14px;">
+        অ্যাকাউন্ট নেই? <b style="color:var(--primary-light);cursor:pointer" onclick="switchTab('register')">রেজিস্টার করুন</b>
+      </p>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="panel" id="registerPanel">
+      <div id="regMsg" class="msg"></div>
+      <label>👤 পূর্ণ নাম</label>
+      <input type="text" id="regName" placeholder="আপনার নাম">
+      <label>📱 ফোন নাম্বার</label>
+      <input type="tel" id="regPhone" placeholder="01XXXXXXXXX">
+      <label>🔒 পাসওয়ার্ড</label>
+      <input type="password" id="regPass" placeholder="কমপক্ষে ৬ অক্ষর">
+      <label>🆔 এনআইডি / পাসপোর্ট</label>
+      <input type="text" id="regNid" placeholder="NID / Passport">
+      <label>🎂 জন্ম তারিখ</label>
+      <input type="date" id="regDob">
+      <label>🏠 ঠিকানা</label>
+      <input type="text" id="regAddress" placeholder="গ্রাম/শহর, উপজেলা, জেলা">
+      <label>🏦 একাউন্টের ধরন</label>
+      <select id="regType">
+        <option value="user">👤 সাধারণ ইউজার</option>
+        <option value="agent">🏪 এজেন্ট</option>
+      </select>
+      <label>🎁 রেফারেল কোড (ঐচ্ছিক)</label>
+      <input type="text" id="regRefCode" placeholder="রেফারকারীর কোড" style="text-transform:uppercase">
+      <div class="small" style="margin-top:4px;color:#fbbf24" id="refCodeCheck"></div>
+
+      <div class="sec-head" style="margin-top:20px"><span class="ico">📷</span> ডকুমেন্ট আপলোড</div>
+      
+      <div class="upload-zone" id="zone-nidFront" onclick="document.getElementById('regNidFront').click()">
+        <div class="u-icon">🪪</div>
+        <div class="u-text">NID/পাসপোর্ট সামনের দিক *</div>
+        <img class="preview" id="prev-nidFront">
+        <span class="change-btn">🔄 পরিবর্তন</span>
+        <input type="file" id="regNidFront" accept="image/*" onchange="handleImage('regNidFront','zone-nidFront','prev-nidFront')">
+      </div>
+
+      <div class="upload-zone" id="zone-nidBack" onclick="document.getElementById('regNidBack').click()">
+        <div class="u-icon">🪪</div>
+        <div class="u-text">NID/পাসপোর্ট পেছনের দিক *</div>
+        <img class="preview" id="prev-nidBack">
+        <span class="change-btn">🔄 পরিবর্তন</span>
+        <input type="file" id="regNidBack" accept="image/*" onchange="handleImage('regNidBack','zone-nidBack','prev-nidBack')">
+      </div>
+
+      <div class="upload-zone" id="zone-selfie" onclick="document.getElementById('regSelfie').click()">
+        <div class="u-icon">🤳</div>
+        <div class="u-text">NID হাতে ধরে সেলফি *</div>
+        <img class="preview" id="prev-selfie">
+        <span class="change-btn">🔄 পরিবর্তন</span>
+        <input type="file" id="regSelfie" accept="image/*" capture="user" onchange="handleImage('regSelfie','zone-selfie','prev-selfie')">
+      </div>
+
+      <label style="display:flex;align-items:center;gap:8px;margin-top:16px;cursor:pointer">
+        <input type="checkbox" id="regAgree" style="width:auto;margin:0">
+        <span class="small">শর্তাবলী মেনে নিচ্ছি</span>
+      </label>
+      <button onclick="register()">✅ রেজিস্ট্রেশন</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="panel" id="dashboardPanel">
+      <div id="dashMsg" class="msg"></div>
+      <div class="balance-hero">
+        <div class="label">মোট ব্যালেন্স</div>
+        <div class="amount" id="dashBalance">৳ 0.00</div>
+        <div class="sub" id="dashInfo">-</div>
+        <div class="chip" id="dashChip">🟢 সক্রিয়</div>
+      </div>
+      <div id="verifyWarning" class="msg warning hidden">⏳ ভেরিফিকেশন পেন্ডিং।</div>
+
+      <div class="quick-grid">
+        <div class="quick" onclick="scrollTo('send')"><div class="ic">💸</div><div class="lb">পাঠান</div></div>
+        <div class="quick" onclick="scrollTo('cash')"><div class="ic">🏧</div><div class="lb">ক্যাশ</div></div>
+        <div class="quick" onclick="scrollTo('fd')"><div class="ic">💰</div><div class="lb">FDR</div></div>
+        <div class="quick" onclick="scrollTo('refer')"><div class="ic">🎁</div><div class="lb">রেফার</div></div>
+      </div>
+
+      <div id="userMenu">
+        <div class="sec-head" id="send"><span class="ico">💸</span> ইউজার ট্রান্সফার (ফি ০%)</div>
+        <input type="tel" id="tfPhone" placeholder="প্রাপকের ফোন">
+        <input type="number" id="tfAmount" placeholder="পরিমাণ (৳)">
+        <button onclick="transferUser()">ট্রান্সফার</button>
+
+        <div class="sec-head" id="cash"><span class="ico">🏧</span> ক্যাশ আউট</div>
+        <input type="tel" id="coAgent" placeholder="এজেন্টের ফোন">
+        <input type="number" id="coAmount" placeholder="পরিমাণ (৳)">
+        <div class="card small">💡 ক্যাশ আউট: ১.৪% • এজেন্ট কমিশন: ০.৪%</div>
+        <button class="gold" onclick="cashOut()">ক্যাশ আউট</button>
+
+        <div class="sec-head" id="refer"><span class="ico">🎁</span> রেফারেল সিস্টেম</div>
+        <div class="ref-info-banner">
+          💡 <b>প্রত্যেক ইউজারই রেফার করতে পারবেন!</b><br>
+          বন্ধুকে আপনার কোড দিন → সে ১০৳ পাবে, আপনি ৭০৳ পাবেন
+        </div>
+        <div class="ref-code-box">
+          <div class="small" style="color:var(--text-dim)">আপনার রেফারেল কোড</div>
+          <div class="ref-code" id="myRefCode">-</div>
+          <div class="small" id="myRefPhone" style="color:var(--text-dim);margin-top:4px"></div>
+          <button class="copy-btn" onclick="copyRefCode()">📋 কপি করুন</button>
+          <button class="copy-btn" onclick="shareRefCode()" style="background:rgba(34,197,94,.2);color:#4ade80">📤 শেয়ার</button>
+        </div>
+        <div class="ref-stat">
+          <div class="item"><div class="num" id="refTotalRefs">0</div><div class="lbl">মোট রেফারেল</div></div>
+          <div class="item"><div class="num" style="color:var(--warning)" id="refPending">৳ 0</div><div class="lbl">পেন্ডিং</div></div>
+          <div class="item"><div class="num" style="color:var(--success)" id="refAvailable">৳ 0</div><div class="lbl">উত্তোলনযোগ্য</div></div>
+          <div class="item"><div class="num" style="color:var(--accent-light)" id="refEarned">৳ 0</div><div class="lbl">মোট আয়</div></div>
+        </div>
+        <div class="card" id="refWithdrawCard">
+          <div style="font-weight:700;color:var(--accent-light);margin-bottom:6px">💵 রেফারেল বোনাস উত্তোলন</div>
+          <div class="small" id="refWithdrawInfo">কমপক্ষে ২,০০০৳ হলে উত্তোলন</div>
+          <div class="ref-progress"><div class="fill" id="refProgressFill" style="width:0%"></div></div>
+          <div class="small" style="text-align:right" id="refProgressText">০ / ২,০০০৳</div>
+          <button class="gold" onclick="withdrawReferral()" id="refWithdrawBtn" disabled>💵 উত্তোলন</button>
+        </div>
+        <div class="sec-head"><span class="ico">📋</span> আপনার রেফারেল তালিকা</div>
+        <div id="refList"><p class="small" style="text-align:center;padding:12px">এখনো কোনো রেফারেল নেই</p></div>
+
+        <div class="sec-head" id="fd"><span class="ico">💰</span> ফিক্সড ডিপোজিট (FDR)</div>
+        <div class="card" style="background:linear-gradient(135deg,rgba(212,175,55,.12),rgba(244,208,63,.05));border-color:rgba(212,175,55,.4)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-size:28px">🏦</span>
+            <div>
+              <div style="font-weight:800;color:var(--accent-light);font-size:15px">মুনাফা-ভিত্তিক FDR স্কিম</div>
+              <div class="small">১ থেকে ৫ বছর মেয়াদ</div>
+            </div>
+          </div>
+          <div class="row3" style="margin-top:10px">
+            <div style="text-align:center;background:rgba(0,0,0,.2);border-radius:8px;padding:6px 4px">
+              <div style="font-size:10px;color:var(--text-dim)">১ বছর</div>
+              <div style="font-weight:800;color:var(--accent-light);font-size:14px">৭%</div>
+            </div>
+            <div style="text-align:center;background:rgba(0,0,0,.2);border-radius:8px;padding:6px 4px">
+              <div style="font-size:10px;color:var(--text-dim)">৩ বছর</div>
+              <div style="font-weight:800;color:var(--accent-light);font-size:14px">৯%</div>
+            </div>
+            <div style="text-align:center;background:rgba(0,0,0,.2);border-radius:8px;padding:6px 4px">
+              <div style="font-size:10px;color:var(--text-dim)">৫ বছর</div>
+              <div style="font-weight:800;color:var(--accent-light);font-size:14px">১১%</div>
+            </div>
+          </div>
+          <div class="small" style="margin-top:10px;color:#fbbf24">
+            ⚠️ মিনিমাম: <b>১০,০০০৳</b> • ৬ মাসের আগে ক্যান্সেল নয়
+          </div>
+        </div>
+        <div class="fd-tabs">
+          <button class="active" onclick="switchFdTab('new',this)">➕ নতুন FDR</button>
+          <button onclick="switchFdTab('my',this)">📋 আমার FDR</button>
+        </div>
+        <div id="fdNewView">
+          <div class="calculator-box">
+            <label>💰 জমার পরিমাণ (৳)</label>
+            <input type="number" id="fdAmount" placeholder="মিনিমাম ১০,০০০৳" min="10000" oninput="calcFD()">
+            <label>📅 মেয়াদ</label>
+            <select id="fdDuration" onchange="calcFD()">
+              <option value="12">১ বছর (৭% মুনাফা)</option>
+              <option value="24">২ বছর (৮% মুনাফা)</option>
+              <option value="36" selected>৩ বছর (৯% মুনাফা)</option>
+              <option value="48">৪ বছর (১০% মুনাফা)</option>
+              <option value="60">৫ বছর (১১% মুনাফা)</option>
+            </select>
+            <label>💵 মুনাফা পরিশোধ</label>
+            <select id="fdPayout" onchange="calcFD()">
+              <option value="maturity">মেয়াদ শেষে একসাথে</option>
+              <option value="monthly">মাসিক মুনাফা</option>
+            </select>
+            <div class="calc-result" id="fdCalcResult">
+              <div class="lbl">মেয়াদ শেষে পাবেন</div>
+              <div class="big" id="fdMaturityAmount">৳ ০</div>
+              <div class="small" id="fdProfitInfo" style="margin-top:4px">মুনাফা: ৳ ০</div>
+            </div>
+          </div>
+          <div id="fdMsg" class="msg"></div>
+          <button class="gold" onclick="createFD()">💰 FDR খুলুন</button>
+        </div>
+        <div id="fdMyView" class="hidden">
+          <div id="fdList"></div>
+        </div>
+
+        <div class="sec-head"><span class="ico">📜</span> লেনদেন</div>
+        <div id="userHistory"></div>
+
+        <div class="sec-head"><span class="ico">🔑</span> নিরাপত্তা</div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div>
+              <div style="font-weight:700">Google Authenticator</div>
+              <div class="small" id="user2faStatus">✅ সক্রিয়</div>
+            </div>
+            <span class="badge verified" id="user2faBadge">🔐 চালু</span>
+          </div>
+          <div id="userQrBox"></div>
+          <div class="otp-secret" id="userSecretBox">-</div>
+        </div>
+        <div class="row2">
+          <button class="gold" onclick="userChangePassword()">🔑 পাসওয়ার্ড</button>
+          <button class="ghost" onclick="userViewSecurity()">📊 লগ</button>
+        </div>
+        <button class="danger" style="margin-top:16px" onclick="logout()">লগআউট</button>
+      </div>
+
+      <div id="agentMenu" style="display:none">
+        <div class="sec-head"><span class="ico">💰</span> ক্যাশ ইন</div>
+        <input type="tel" id="ciUser" placeholder="ইউজারের ফোন">
+        <input type="number" id="ciAmount" placeholder="পরিমাণ (৳)">
+        <div class="card small">💰 কমিশন: ০.৪%</div>
+        <button class="gold" onclick="cashIn()">ক্যাশ ইন</button>
+
+        <div class="sec-head"><span class="ico">🏧</span> পেন্ডিং ক্যাশ আউট</div>
+        <div id="agentPending"></div>
+
+        <div class="sec-head"><span class="ico">🔓</span> লকড আনলক</div>
+        <input type="tel" id="unlockUserPhone" placeholder="গ্রাহকের ফোন">
+        <input type="text" id="unlockUserNid" placeholder="গ্রাহকের NID">
+        <input type="text" id="unlockNewPass" placeholder="নতুন পাসওয়ার্ড (ঐচ্ছিক)">
+        <button class="gold" onclick="agentUnlockAccount()">🔓 আনলক</button>
+
+        <div class="sec-head"><span class="ico">🔄</span> এজেন্ট→এজেন্ট</div>
+        <input type="tel" id="aaAgent" placeholder="প্রাপক এজেন্টের ফোন">
+        <input type="number" id="aaAmount" placeholder="পরিমাণ (৳)">
+        <button onclick="agentToAgent()">ট্রান্সফার (ফি ০%)</button>
+
+        <div class="sec-head"><span class="ico">📜</span> লেনদেন</div>
+        <div id="agentHistory"></div>
+
+        <div class="sec-head"><span class="ico">🔑</span> নিরাপত্তা</div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div>
+              <div style="font-weight:700">Google Authenticator</div>
+              <div class="small" id="agent2faStatus">✅ সক্রিয়</div>
+            </div>
+            <span class="badge verified" id="agent2faBadge">🔐 চালু</span>
+          </div>
+          <div id="agentQrBox"></div>
+          <div class="otp-secret" id="agentSecretBox">-</div>
+        </div>
+        <div class="row2">
+          <button class="gold" onclick="userChangePassword()">🔑 পাসওয়ার্ড</button>
+          <button class="ghost" onclick="userViewSecurity()">📊 লগ</button>
+        </div>
+        <button class="danger" style="margin-top:16px" onclick="logout()">লগআউট</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminPanel" style="display:none">
+    <div class="panel active">
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-size:44px;filter:drop-shadow(0 4px 15px rgba(239,68,68,.5))">👑</div>
+        <h3 style="color:#f87171;font-size:18px;margin-top:6px">এডমিন প্যানেল</h3>
+      </div>
+      <div id="adminMsg" class="msg"></div>
+      <label>👤 এডমিন ইউজারনেম</label>
+      <input type="text" id="adminUser" placeholder="admin">
+      <label>🔒 এডমিন পাসওয়ার্ড</label>
+      <input type="password" id="adminPass" placeholder="••••••••">
+      <label>🔐 Google Authenticator কোড</label>
+      <input type="text" id="adminOtp" placeholder="000000" maxlength="6" style="letter-spacing:8px;text-align:center;font-size:20px;font-weight:700">
+      <button class="danger" onclick="adminLogin()">🔓 এডমিন লগইন</button>
+      <button class="ghost" onclick="closeAdmin()">← ফিরে যান</button>
+    </div>
+  </div>
+
+  <div id="adminDashboard" style="display:none">
+    <div class="panel active">
+      <div class="sec-head"><span class="ico">👑</span> এডমিন ড্যাশবোর্ড</div>
+      <div id="adminDashMsg" class="msg"></div>
+      <div class="stats-grid" id="adminStats"></div>
+
+      <div class="sec-head"><span class="ico">🔍</span> একাউন্ট সার্চ</div>
+      <div class="search-type">
+        <button class="active" data-stype="all" onclick="setSearchType('all',this)">সব</button>
+        <button data-stype="phone" onclick="setSearchType('phone',this)">📱 ফোন</button>
+        <button data-stype="nid" onclick="setSearchType('nid',this)">🆔 NID</button>
+      </div>
+      <div class="search-box">
+        <span class="icon">🔍</span>
+        <input type="text" id="adminSearch" placeholder="ফোন / NID / রেফারেল কোড..." oninput="liveSearch()">
+      </div>
+      <div id="searchResults" style="margin-top:12px"></div>
+
+      <div class="admin-bar" style="margin-top:16px">
+        <button class="active" onclick="adminTab('verify',this)">⏳ ভেরিফাই</button>
+        <button onclick="adminTab('refs',this)">🎁 রেফারেল <span id="refPendingBadge" style="background:#ef4444;color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;margin-left:3px"></span></button>
+        <button onclick="adminTab('locked',this)">🔒 লকড</button>
+        <button onclick="adminTab('users',this)">👥 ইউজার</button>
+        <button onclick="adminTab('fds',this)">💰 FDR</button>
+        <button onclick="adminTab('tx',this)">📜 লেনদেন</button>
+        <button onclick="adminTab('ctrl',this)">⚙️ কন্ট্রোল</button>
+        <button onclick="adminTab('settings',this)">⚙️ সেটিংস</button>
+        <button onclick="adminTab('self',this)">🔐 নিজের</button>
+      </div>
+
+      <div id="adminVerifyTab" class="admin-tab">
+        <div class="sec-head"><span class="ico">⏳</span> পেন্ডিং ভেরিফিকেশন</div>
+        <div id="pendingVerifyList"></div>
+      </div>
+
+      <div id="adminRefsTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">🎁</span> রেফারেল বোনাস অ্যাপ্রুভাল</div>
+        <div id="pendingRefsList"></div>
+        <div class="sec-head"><span class="ico">📋</span> সব রেফারেল</div>
+        <div id="allRefsList"></div>
+      </div>
+
+      <div id="adminLockedTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">🔒</span> লকড একাউন্ট</div>
+        <div id="lockedAccountsList"></div>
+      </div>
+
+      <div id="adminUsersTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">👥</span> সব ইউজার</div>
+        <div id="allUsersList"></div>
+      </div>
+
+      <div id="adminFdsTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">💰</span> সব FDR</div>
+        <div id="adminFdStats" class="stats-grid"></div>
+        <div id="allFdList"></div>
+      </div>
+
+      <div id="adminTxTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">📜</span> সব লেনদেন</div>
+        <div id="allTxList"></div>
+      </div>
+
+      <div id="adminCtrlTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">⚙️</span> ইউজার কন্ট্রোল</div>
+        <input type="tel" id="ctrlPhone" placeholder="ইউজারের ফোন / NID">
+        <input type="number" id="ctrlAmount" placeholder="পরিমাণ (৳)">
+        <div class="row2">
+          <button onclick="adminCredit()">➕ যোগ</button>
+          <button class="danger" onclick="adminDebit()">➖ কাটা</button>
+        </div>
+        <div class="row2" style="margin-top:8px">
+          <button class="gold" onclick="adminResetPassword()">🔑 পাসওয়ার্ড</button>
+          <button class="danger" onclick="adminToggleBlock()">🚫 ব্লক/আনব্লক</button>
+        </div>
+        <div class="row2" style="margin-top:8px">
+          <button class="gold" onclick="adminVerify()">✅ ভেরিফাই</button>
+          <button class="danger" onclick="adminRemove2FA()">🔓 2FA বাদ</button>
+        </div>
+        <div class="row2" style="margin-top:8px">
+          <button class="gold" onclick="adminUnlockAccount()">🔓 আনলক</button>
+          <button class="danger" onclick="adminDeleteUser()">🗑️ ডিলিট</button>
+        </div>
+        <button class="gold" style="margin-top:8px" onclick="adminViewSecurityLog()">📊 সিকিউরিটি লগ</button>
+      </div>
+
+      <div id="adminSettingsTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">⚙️</span> সিস্টেম সেটিংস</div>
+        
+        <div class="card" style="background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.4)">
+          <div style="font-weight:800;color:var(--accent-light);margin-bottom:10px">📞 কাস্টমার কেয়ার</div>
+          <label>📱 নাম্বার</label>
+          <input type="tel" id="settingCCNumber" placeholder="16247">
+          <label>📝 লেবেল</label>
+          <input type="text" id="settingCCLabel" placeholder="২৪/৭ হেল্পলাইন">
+          <label>🏦 প্রতিষ্ঠানের নাম</label>
+          <input type="text" id="settingBankName">
+          <label>📝 স্লোগান</label>
+          <input type="text" id="settingBankTagline">
+          <div id="ccPreview" class="cc-display" style="margin:6px 0">
+            <div class="small" id="ccPreviewLabel">২৪/৭ হেল্পলাইন</div>
+            <div class="num" id="ccPreviewNum">16247</div>
+          </div>
+        </div>
+
+        <div class="card" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.4)">
+          <div style="font-weight:800;color:#60a5fa;margin-bottom:10px">🎁 রেফারেল</div>
+          <label>রেফারকারীর বোনাস (৳)</label>
+          <input type="number" id="settingRefBonus" value="70">
+          <label>নতুন ইউজারের বোনাস (৳)</label>
+          <input type="number" id="settingNewUserBonus" value="10">
+          <label>মিনিমাম উত্তোলন (৳)</label>
+          <input type="number" id="settingRefMinWithdraw" value="2000">
+          <label>অটো-FDR মেয়াদ (মাস)</label>
+          <input type="number" id="settingRefAutoFdMonths" value="12">
+        </div>
+
+        <div class="card">
+          <div style="font-weight:800;color:var(--accent-light);margin-bottom:10px">💰 ফি ও কমিশন</div>
+          <label>ক্যাশ আউট (%)</label>
+          <input type="number" id="settingCashoutFee" step="0.1" value="1.4">
+          <label>এজেন্ট কমিশন (%)</label>
+          <input type="number" id="settingAgentCommission" step="0.1" value="0.4">
+          <label>ক্যাশ ইন কমিশন (%)</label>
+          <input type="number" id="settingCashinFee" step="0.1" value="0.4">
+        </div>
+
+        <div class="card" style="background:rgba(212,175,55,.08);border-color:rgba(212,175,55,.3)">
+          <div style="font-weight:800;color:var(--accent-light);margin-bottom:10px">💰 FDR</div>
+          <label>সর্বনিম্ন FD (৳)</label>
+          <input type="number" id="settingFdMin" value="10000">
+          <label>সর্বোচ্চ FD (৳)</label>
+          <input type="number" id="settingFdMax" value="5000000">
+          <label>মিনিমাম ক্যান্সেল (মাস)</label>
+          <input type="number" id="settingFdMinCancel" value="6">
+          <label>মুনাফা ১ বছর (%)</label>
+          <input type="number" id="settingFdRate1" step="0.1" value="7">
+          <label>মুনাফা ২ বছর (%)</label>
+          <input type="number" id="settingFdRate2" step="0.1" value="8">
+          <label>মুনাফা ৩ বছর (%)</label>
+          <input type="number" id="settingFdRate3" step="0.1" value="9">
+          <label>মুনাফা ৪ বছর (%)</label>
+          <input type="number" id="settingFdRate4" step="0.1" value="10">
+          <label>মুনাফা ৫ বছর (%)</label>
+          <input type="number" id="settingFdRate5" step="0.1" value="11">
+          <label>ক্যান্সেল পেনাল্টি (%)</label>
+          <input type="number" id="settingFdPenalty" step="0.1" value="2">
+        </div>
+
+        <div class="card">
+          <div style="font-weight:800;color:var(--accent-light);margin-bottom:10px">🔐 নিরাপত্তা</div>
+          <label>সর্বোচ্চ ব্যর্থ চেষ্টা</label>
+          <input type="number" id="settingMaxAttempts" value="3">
+          <label>অটো-লক?</label>
+          <select id="settingAutoLock">
+            <option value="true">✅ হ্যাঁ</option>
+            <option value="false">❌ না</option>
+          </select>
+        </div>
+
+        <div id="settingsMsg" class="msg"></div>
+        <button class="gold" onclick="saveSettings()">💾 সেভ</button>
+        <button class="ghost" onclick="loadSettings()">🔄 রিসেট</button>
+      </div>
+
+      <div id="adminSelfTab" class="admin-tab hidden">
+        <div class="sec-head"><span class="ico">🔐</span> নিজের সেটিংস</div>
+        <div class="card">
+          <div class="tx-detail-line"><span class="k">👤 ইউজারনেম</span><span class="v" id="adminSelfUser">admin</span></div>
+          <div class="tx-detail-line"><span class="k">🔐 2FA</span><span class="v" id="adminSelf2fa">✅ সক্রিয়</span></div>
+          <div class="tx-detail-line"><span class="k">📊 পাসওয়ার্ড চেঞ্জ</span><span class="v" id="adminSelfPassCount">0 বার</span></div>
+        </div>
+        <div class="row2">
+          <button class="gold" onclick="adminChangeUsername()">👤 ইউজারনেম</button>
+          <button class="gold" onclick="adminChangePassword()">🔑 পাসওয়ার্ড</button>
+        </div>
+        <div class="row2" style="margin-top:8px">
+          <button onclick="adminRegen2FA()">🔄 2FA নতুন</button>
+          <button class="danger" onclick="adminRemoveOwn2FA()">🔓 2FA বাদ</button>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div style="font-weight:700;color:var(--accent-light);margin-bottom:6px">🔐 Admin 2FA</div>
+          <div id="adminQrBox"></div>
+          <div class="otp-secret" id="adminSecretBox">-</div>
+        </div>
+      </div>
+
+      <button class="ghost" style="margin-top:16px" onclick="adminLogout()">← এডমিন লগআউট</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================
+   FIREBASE SETUP
+   ============================================================ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, get, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDZSh4N0baHMQyZjmgyFXiunT-DXfmo4Kc",
+  authDomain: "mridulk-4224a.firebaseapp.com",
+  databaseURL: "https://mridulk-4224a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mridulk-4224a",
+  storageBucket: "mridulk-4224a.firebasestorage.app",
+  messagingSenderId: "818532696018",
+  appId: "1:818532696018:web:770ddbbdef496329b4920b",
+  measurementId: "G-QRX8E2Y48B"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* ============================================================
+   DEFAULT CONFIGS
+   ============================================================ */
+const DEFAULT_ADMIN = {
+  username:'admin', password:'admin123', secret:'SIBADMIN2FA2024X',
+  has2FA:true, passwordChanges:0, lastPasswordChange:null
+};
+
+const DEFAULT_SETTINGS = {
+  ccNumber: '16247', ccLabel: '২৪/৭ হেল্পলাইন',
+  bankName: 'সিদরাতুল ইসলামী ব্যাংক', bankTagline: 'বিশ্বস্ত ইসলামী ব্যাংকিং সেবা',
+  cashoutFee: 1.4, agentCommission: 0.4, cashinFee: 0.4,
+  maxAttempts: 3, autoLock: true,
+  fdMin: 10000, fdMax: 5000000, fdMinCancelMonths: 6,
+  fdRate1: 7, fdRate2: 8, fdRate3: 9, fdRate4: 10, fdRate5: 11,
+  fdPenalty: 2,
+  refBonus: 70, newUserBonus: 10, refMinWithdraw: 2000, refAutoFdMonths: 12,
+  updatedAt: null, updatedBy: null
+};
+
+/* ============================================================
+   CACHE + FIREBASE REFS
+   ============================================================ */
+const _cache = {
+  users: [], tx: [], pending: [], admin: null, settings: null, fds: [], refs: []
+};
+let _loaded = false;
+let _listenersSetup = false;
+
+const FRef = {
+  users: ref(db, 'sib/users'),
+  tx: ref(db, 'sib/transactions'),
+  pending: ref(db, 'sib/pending'),
+  admin: ref(db, 'sib/admin'),
+  settings: ref(db, 'sib/settings'),
+  fds: ref(db, 'sib/fds'),
+  refs: ref(db, 'sib/referrals')
+};
+
+/* ============================================================
+   FIREBASE SYNC HELPERS
+   ============================================================ */
+function arrToMap(arr){
+  const m = {};
+  arr.forEach(x => { if(x && x.id) m[x.id] = x; });
+  return m;
+}
+function mapToArr(map){
+  if(!map) return [];
+  return Object.values(map).filter(x => x);
+}
+
+async function writeFB(key, value){
+  try {
+    if(Array.isArray(value)){
+      await set(FRef[key], arrToMap(value));
+    } else {
+      await set(FRef[key], value);
+    }
+  } catch(e){
+    console.error('Firebase write error:', key, e);
+    toast('❌ ক্লাউডে সেভ হয়নি','error');
+  }
+}
+
+/* DB wrapper — keeps existing code working */
+const DB = {
+  get users(){ return _cache.users; },
+  set users(v){ _cache.users = v; writeFB('users', v); },
+  get tx(){ return _cache.tx; },
+  set tx(v){ _cache.tx = v; writeFB('tx', v); },
+  get pending(){ return _cache.pending; },
+  set pending(v){ _cache.pending = v; writeFB('pending', v); },
+  get admin(){ return _cache.admin; },
+  set admin(v){ _cache.admin = v; writeFB('admin', v); },
+  get settings(){ return _cache.settings; },
+  set settings(v){ _cache.settings = v; writeFB('settings', v); },
+  get fds(){ return _cache.fds; },
+  set fds(v){ _cache.fds = v; writeFB('fds', v); },
+  get refs(){ return _cache.refs; },
+  set refs(v){ _cache.refs = v; writeFB('refs', v); }
+};
+
+function getAdmin(){ let a=DB.admin; if(!a){a={...DEFAULT_ADMIN};DB.admin=a;} return a; }
+function setAdmin(a){ DB.admin=a; }
+function getSettings(){
+  let s = DB.settings;
+  if(!s){ s = {...DEFAULT_SETTINGS}; DB.settings = s; return s; }
+  let changed=false;
+  Object.keys(DEFAULT_SETTINGS).forEach(k=>{ if(s[k]===undefined){ s[k]=DEFAULT_SETTINGS[k]; changed=true; } });
+  if(changed) DB.settings=s;
+  return s;
+}
+function setSettings(s){ s.updatedAt=new Date().toISOString(); DB.settings=s; }
+function CC(){ return getSettings().ccNumber; }
+
+/* ============================================================
+   REAL-TIME LISTENERS
+   ============================================================ */
+function setupListeners(){
+  if(_listenersSetup) return;
+  _listenersSetup = true;
+
+  onValue(FRef.users, snap => {
+    _cache.users = mapToArr(snap.val());
+    if(_loaded){
+      if(currentUser){
+        const fresh = _cache.users.find(u => u.id === currentUser.id);
+        if(fresh){
+          if(fresh.locked || !fresh.active){
+            toast('🚫 আপনার একাউন্ট নিষ্ক্রিয়','error');
+            logout();
+            return;
+          }
+          currentUser = fresh;
+          renderDashboard();
+        }
+      }
+      if(isAdmin) renderAdmin();
+    }
+    updateCloudStatus(true);
+  }, err => { console.error(err); updateCloudStatus(false); });
+
+  onValue(FRef.tx, snap => {
+    _cache.tx = mapToArr(snap.val()).sort((a,b)=>b.time-a.time);
+    if(_loaded){
+      if(currentUser) renderDashboard();
+      if(isAdmin) renderAdmin();
+    }
+  }, err => console.error(err));
+
+  onValue(FRef.pending, snap => {
+    _cache.pending = mapToArr(snap.val());
+    if(_loaded){
+      if(currentUser && currentUser.type === 'agent') renderAgentPending();
+      if(isAdmin) renderAdmin();
+    }
+  }, err => console.error(err));
+
+  onValue(FRef.fds, snap => {
+    _cache.fds = mapToArr(snap.val());
+    if(_loaded){
+      if(currentUser && currentUser.type === 'user' && currentFdTab==='my') renderMyFDs();
+      if(isAdmin) renderAdmin();
+    }
+  }, err => console.error(err));
+
+  onValue(FRef.refs, snap => {
+    _cache.refs = mapToArr(snap.val());
+    if(_loaded){
+      if(currentUser && currentUser.type === 'user') renderReferralUI(currentUser);
+      if(isAdmin) renderAdmin();
+    }
+  }, err => console.error(err));
+
+  onValue(FRef.settings, snap => {
+    const v = snap.val();
+    if(v){ _cache.settings = {...DEFAULT_SETTINGS, ...v}; }
+    if(_loaded){
+      applyBranding();
+      if(isAdmin && document.getElementById('adminSettingsTab') && !document.getElementById('adminSettingsTab').classList.contains('hidden')){
+        loadSettings();
+      }
+    }
+  }, err => console.error(err));
+
+  onValue(FRef.admin, snap => {
+    const v = snap.val();
+    if(v) _cache.admin = v;
+  }, err => console.error(err));
+}
+
+function updateCloudStatus(online){
+  const el = document.getElementById('cloudStatus');
+  if(!el) return;
+  el.textContent = online ? 'সিঙ্ক' : 'অফলাইন';
+  el.style.color = online ? '' : '#f87171';
+}
+
+/* ============================================================
+   TOTP & UTILS
+   ============================================================ */
+const B32='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function genSecret(len=16){let s='';for(let i=0;i<len;i++)s+=B32[Math.floor(Math.random()*32)];return s;}
+function totp(secret,offset=0){
+  if(!secret)return '000000';
+  const t=Math.floor(Date.now()/30000)+offset;let h=5381;const str=secret+'|'+t;
+  for(let i=0;i<str.length;i++)h=((h<<5)+h)+str.charCodeAt(i);
+  return String(Math.abs(h%1000000)).padStart(6,'0');
+}
+function verifyOtp(secret,code){
+  if(!secret||!code)return false;
+  code=String(code).trim();
+  for(let o=-1;o<=1;o++) if(totp(secret,o)===code)return true;
+  return false;
+}
+function otpUri(secret,label,issuer='SIB'){
+  return `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(label)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
+}
+function genTxId(){
+  const d=new Date();
+  return 'SIB'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+
+    String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0')+
+    String(Math.floor(Math.random()*100000)).padStart(5,'0');
+}
+function genFdId(){
+  const d=new Date();
+  return 'FDR'+d.getFullYear()+String(Math.floor(Math.random()*1000000)).padStart(6,'0');
+}
+function genRefCode(){
+  let s='SIB';
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  for(let i=0;i<6;i++)s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+function monthsBetween(d1,d2){
+  const a=new Date(d1),b=new Date(d2);
+  return (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth());
+}
+
+/* ============================================================
+   UI HELPERS
+   ============================================================ */
+function toast(text,type='success'){
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  const ic={success:'✅',error:'❌',info:'ℹ️'};
+  t.innerHTML=`<span>${ic[type]||''}</span><span>${text}</span>`;
+  document.getElementById('toastBox').appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},3200);
+}
+function showMsg(id,text,type='success'){
+  const el=document.getElementById(id);if(!el)return;
+  el.textContent=text;el.className='msg '+type;
+  clearTimeout(el._t);el._t=setTimeout(()=>{el.className='msg';},6000);
+}
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#mainApp .panel').forEach(p=>p.classList.remove('active'));
+  const tab=document.querySelector(`.tab[data-tab="${name}"]`);
+  if(tab)tab.classList.add('active');
+  const panel=document.getElementById(name+'Panel');
+  if(panel)panel.classList.add('active');
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.getAttribute('data-theme')==='light';
+  html.setAttribute('data-theme',isLight?'dark':'light');
+  document.getElementById('themeBtn').textContent=isLight?'🌙':'☀️';
+  localStorage.setItem('sib_theme_v11',isLight?'dark':'light');
+}
+(function(){const s=localStorage.getItem('sib_theme_v11');if(s==='light')document.documentElement.setAttribute('data-theme','light');setTimeout(()=>{document.getElementById('themeBtn').textContent=s==='light'?'☀️':'🌙';},100);})();
+setInterval(()=>{const el=document.getElementById('clockDisplay');if(el){const d=new Date();el.textContent=d.toLocaleTimeString('en-GB');}},1000);
+(function(){const box=document.getElementById('particles');for(let i=0;i<25;i++){const s=document.createElement('span');s.style.left=Math.random()*100+'%';s.style.animationDuration=(10+Math.random()*15)+'s';s.style.animationDelay=(Math.random()*10)+'s';s.style.background=Math.random()>.5?'var(--primary-light)':'var(--accent)';box.appendChild(s);}})();
+function openModal(html){document.getElementById('modalContent').innerHTML=html;document.getElementById('modalBg').classList.add('show');}
+function closeModal(){document.getElementById('modalBg').classList.remove('show');}
+function applyBranding(){
+  const s = getSettings();
+  document.getElementById('headerTitle').textContent = s.bankName;
+  document.getElementById('headerSub').textContent = s.bankTagline;
+  document.title = s.bankName;
+}
+
+/* ============================================================
+   IMAGE HANDLING
+   ============================================================ */
+const imageStore={};
+function handleImage(inputId,zoneId,previewId){
+  const input=document.getElementById(inputId),zone=document.getElementById(zoneId),preview=document.getElementById(previewId);
+  const file=input.files[0];if(!file)return;
+  if(file.size>2*1024*1024){toast('ছবি ২MB এর ছোট','error');input.value='';return;}
+  if(!file.type.startsWith('image/')){toast('শুধু ছবি','error');input.value='';return;}
+  const r=new FileReader();
+  r.onload=e=>{preview.src=e.target.result;zone.classList.add('has-file');imageStore[inputId]=e.target.result;toast('ছবি আপলোড','success');};
+  r.readAsDataURL(file);
+}
+function viewImage(url){openModal(`<h3>🖼️ ছবি</h3><img src="${url}" style="width:100%;border-radius:12px"><button onclick="closeModal()">বন্ধ</button>`);}
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentUser=null;
+let isAdmin=false;
+let currentFdTab='new';
+let MAX_FAILED_ATTEMPTS = 3;
+
+/* ============================================================
+   FDR HELPERS
+   ============================================================ */
+function getFdRate(months){
+  const s=getSettings();
+  if(months<=12) return s.fdRate1;
+  if(months<=24) return s.fdRate2;
+  if(months<=36) return s.fdRate3;
+  if(months<=48) return s.fdRate4;
+  return s.fdRate5;
+}
+function calcFdMaturity(amount, months, payout){
+  const rate = getFdRate(months);
+  const years = months/12;
+  const totalProfit = amount * (rate/100) * years;
+  const maturityAmount = amount + (payout==='maturity' ? totalProfit : 0);
+  const monthlyProfit = payout==='monthly' ? totalProfit/months : 0;
+  return { rate, totalProfit, maturityAmount, monthlyProfit };
+}
+function canCancelFd(fd){
+  const months = monthsBetween(fd.startDate, new Date());
+  const s = getSettings();
+  return { can: months >= s.fdMinCancelMonths, months, minMonths: s.fdMinCancelMonths };
+}
+function getFdProgress(fd){
+  const totalMs = new Date(fd.maturityDate) - new Date(fd.startDate);
+  const elapsed = new Date() - new Date(fd.startDate);
+  return Math.min(100, Math.max(0, (elapsed/totalMs)*100));
+}
+
+/* ============================================================
+   REFERRAL HELPERS
+   ============================================================ */
+function findUserByRefCode(code){
+  if(!code)return null;
+  return DB.users.find(u=>u.referralCode===code.toUpperCase());
+}
+function getUserRefStats(phone){
+  const refs = DB.refs.filter(r=>r.referrerPhone===phone);
+  const approved = refs.filter(r=>r.status==='approved');
+  const pending = refs.filter(r=>r.status==='pending');
+  const user = DB.users.find(u=>u.phone===phone);
+  return {
+    total: refs.length,
+    approved: approved.length,
+    pending: pending.length,
+    pendingAmount: pending.reduce((s,r)=>s+r.referrerBonus,0),
+    available: (user && user.referralEarnings) || 0,
+    earned: approved.reduce((s,r)=>s+r.referrerBonus,0),
+    autoFdCount: (user && user.refAutoFdCount) || 0
+  };
+}
+function checkAndAutoConvertRef(user){
+  const s = getSettings();
+  const minAmt = s.refMinWithdraw;
+  if(user.referralEarnings >= minAmt){
+    const amount = user.referralEarnings;
+    const months = s.refAutoFdMonths || 12;
+    const r = calcFdMaturity(amount, months, 'maturity');
+    const startDate = new Date();
+    const maturityDate = new Date();
+    maturityDate.setMonth(maturityDate.getMonth() + months);
+    const fd = {
+      id: genFdId(), userPhone: user.phone, userName: user.name,
+      amount: amount, months: months, payout: 'maturity',
+      rate: r.rate, totalProfit: r.totalProfit, maturityAmount: r.maturityAmount,
+      monthlyProfit: r.monthlyProfit,
+      startDate: startDate.toISOString(), maturityDate: maturityDate.toISOString(),
+      status: 'active', createdAt: startDate.toISOString(),
+      cancelledAt: null, maturedAt: null, source: 'referral_auto'
+    };
+    const fds = [...DB.fds, fd];
+    DB.fds = fds;
+    user.referralEarnings = 0;
+    user.refAutoFdCount = (user.refAutoFdCount || 0) + 1;
+    const users = DB.users.map(u => u.id === user.id ? user : u);
+    DB.users = users;
+    const tx = [...DB.tx, {
+      txId: genTxId(), type: 'রেফারেল প্রসেসিং',
+      from: user.phone, to: 'system', amount: amount, time: Date.now(),
+      note: 'সিস্টেম প্রসেসিং'
+    }];
+    DB.tx = tx;
+    return true;
+  }
+  return false;
+}
+
+/* ============================================================
+   FDR USER ACTIONS
+   ============================================================ */
+function switchFdTab(tab, btn){
+  currentFdTab = tab;
+  document.querySelectorAll('.fd-tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fdNewView').classList.toggle('hidden', tab!=='new');
+  document.getElementById('fdMyView').classList.toggle('hidden', tab!=='my');
+  if(tab==='my') renderMyFDs();
+}
+function calcFD(){
+  const amt=parseFloat(document.getElementById('fdAmount').value)||0;
+  const months=parseInt(document.getElementById('fdDuration').value);
+  const payout=document.getElementById('fdPayout').value;
+  const r = calcFdMaturity(amt, months, payout);
+  document.getElementById('fdMaturityAmount').textContent = '৳ '+r.maturityAmount.toLocaleString('bn-BD',{maximumFractionDigits:2});
+  if(payout==='monthly'){
+    document.getElementById('fdProfitInfo').textContent = `মাসিক: ৳${r.monthlyProfit.toFixed(2)} • মোট: ৳${r.totalProfit.toFixed(2)} (${r.rate}%)`;
+  } else {
+    document.getElementById('fdProfitInfo').textContent = `মুনাফা: ৳${r.totalProfit.toFixed(2)} (${r.rate}%)`;
+  }
+}
+function createFD(){
+  const amt=parseFloat(document.getElementById('fdAmount').value);
+  const months=parseInt(document.getElementById('fdDuration').value);
+  const payout=document.getElementById('fdPayout').value;
+  const s=getSettings();
+  if(!amt||amt<s.fdMin){ showMsg('fdMsg',`মিনিমাম ৳${s.fdMin.toLocaleString('en-IN')}`,'error'); return; }
+  if(amt>s.fdMax){ showMsg('fdMsg',`সর্বোচ্চ ৳${s.fdMax.toLocaleString('en-IN')}`,'error'); return; }
+  if(currentUser.balance<amt){ showMsg('fdMsg',`ব্যালেন্স কম`,'error'); return; }
+  if(!currentUser.verified){ showMsg('fdMsg','ভেরিফাইড হতে হবে','error'); return; }
+
+  const r = calcFdMaturity(amt, months, payout);
+  const startDate = new Date();
+  const maturityDate = new Date();
+  maturityDate.setMonth(maturityDate.getMonth() + months);
+
+  const fd = {
+    id: genFdId(), userPhone: currentUser.phone, userName: currentUser.name,
+    amount: amt, months, payout, rate: r.rate,
+    totalProfit: r.totalProfit, maturityAmount: r.maturityAmount,
+    monthlyProfit: r.monthlyProfit,
+    startDate: startDate.toISOString(), maturityDate: maturityDate.toISOString(),
+    status: 'active', createdAt: startDate.toISOString(),
+    cancelledAt: null, maturedAt: null
+  };
+
+  const users=DB.users.map(u=>u.id===currentUser.id ? {...u, balance:u.balance-amt} : u);
+  DB.users = users;
+  DB.fds = [...DB.fds, fd];
+  DB.tx = [...DB.tx, {
+    txId: genTxId(), type: 'FDR খোলা',
+    from: currentUser.phone, to: 'FDR:'+fd.id, amount: amt, time: Date.now(),
+    note: `${months} মাস • ${r.rate}%`
+  }];
+  toast(`✅ FDR #${fd.id} খোলা`,'success');
+  showMsg('fdMsg','FDR সফলভাবে তৈরি হয়েছে!','success');
+  document.getElementById('fdAmount').value='';
+  calcFD();
+  renderDashboard();
+}
+function renderMyFDs(){
+  const el=document.getElementById('fdList');if(!el)return;
+  const myFds = DB.fds.filter(f=>f.userPhone===currentUser.phone);
+  if(myFds.length===0){ el.innerHTML='<p class="small" style="text-align:center;padding:20px">কোন FDR নেই</p>'; return; }
+  el.innerHTML = myFds.slice().reverse().map(fd=>{
+    const prog = fd.status==='active' ? getFdProgress(fd) : 100;
+    const cancelInfo = canCancelFd(fd);
+    const remainingDays = Math.ceil((new Date(fd.maturityDate)-new Date())/(1000*60*60*24));
+    let statusBadge = '';
+    if(fd.status==='active') statusBadge = '<span class="badge fd">🟢 চলমান</span>';
+    else if(fd.status==='matured') statusBadge = '<span class="badge matured">✅ ম্যাচিউরড</span>';
+    else if(fd.status==='cancelled') statusBadge = '<span class="badge cancelled">❌ বাতিল</span>';
+
+    return `<div class="fd-card">
+      <div class="fd-head">
+        <div><div class="small">FDR ID</div><div class="fd-id">${fd.id}</div></div>
+        ${statusBadge}
+      </div>
+      <div class="fd-amount">৳ ${fd.amount.toLocaleString('bn-BD',{maximumFractionDigits:2})}</div>
+      <div class="small">মেয়াদ শেষে: <b style="color:var(--accent-light)">৳${fd.maturityAmount.toLocaleString('bn-BD',{maximumFractionDigits:2})}</b></div>
+      <div class="progress-bar"><div class="fill" style="width:${prog}%"></div></div>
+      <div class="small" style="display:flex;justify-content:space-between">
+        <span>শুরু: ${new Date(fd.startDate).toLocaleDateString('bn-BD')}</span>
+        <span>${prog.toFixed(1)}%</span>
+        <span>মেয়াদ: ${new Date(fd.maturityDate).toLocaleDateString('bn-BD')}</span>
+      </div>
+      <div class="fd-grid">
+        <div class="fd-item"><div class="lbl">মেয়াদকাল</div><div class="val">${fd.months} মাস</div></div>
+        <div class="fd-item"><div class="lbl">মুনাফা</div><div class="val" style="color:#4ade80">${fd.rate}%</div></div>
+        <div class="fd-item"><div class="lbl">মোট মুনাফা</div><div class="val">৳${fd.totalProfit.toLocaleString('bn-BD',{maximumFractionDigits:2})}</div></div>
+        <div class="fd-item"><div class="lbl">পেমেন্ট</div><div class="val">${fd.payout==='monthly'?'মাসিক':'মেয়াদ শেষে'}</div></div>
+      </div>
+      ${fd.status==='active' ? `
+      <div class="small" style="margin-top:10px;color:#fbbf24;text-align:center">
+        ${remainingDays>0 ? `⏳ আরও ${remainingDays} দিন` : '✅ মেয়াদ পূর্ণ'}
+      </div>
+      ${!cancelInfo.can ? `
+        <div class="msg warning" style="display:block;margin-top:10px;font-size:11px">
+          ⚠️ ${cancelInfo.minMonths} মাস পর ক্যান্সেল (এখন ${cancelInfo.months} মাস)
+        </div>
+      ` : `
+        <button class="danger" style="margin-top:10px" onclick="openCancelFD('${fd.id}')">❌ FDR ক্যান্সেল</button>
+      `}
+      `:''}
+    </div>`;
+  }).join('');
+}
+function openCancelFD(fdId){
+  const fd = DB.fds.find(f=>f.id===fdId);if(!fd)return;
+  const info = canCancelFd(fd);
+  if(!info.can){ toast('এখনো নয়','error'); return; }
+  const s=getSettings();
+  const penalty = fd.amount * (s.fdPenalty/100);
+  const refund = fd.amount - penalty;
+  openModal(`
+    <h3>❌ FDR ক্যান্সেল</h3>
+    <div class="card" style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3)">
+      <div><b>${fd.id}</b></div>
+      <div class="small">মূল: ৳${fd.amount.toLocaleString('bn-BD')}</div>
+      <div class="small">চলমান: ${info.months} মাস</div>
+    </div>
+    <div class="card">
+      <div class="tx-detail-line"><span class="k">💰 মূল</span><span class="v">৳${fd.amount.toFixed(2)}</span></div>
+      <div class="tx-detail-line"><span class="k">⚠️ পেনাল্টি (${s.fdPenalty}%)</span><span class="v" style="color:#f87171">- ৳${penalty.toFixed(2)}</span></div>
+      <div class="tx-detail-line"><span class="k"><b>ফেরত পাবেন</b></span><span class="v" style="color:#4ade80;font-size:15px">৳${refund.toFixed(2)}</span></div>
+    </div>
+    <button class="danger" onclick="confirmCancelFD('${fd.id}')">❌ ক্যান্সেল নিশ্চিত</button>
+    <button class="ghost" onclick="closeModal()">বাতিল</button>
+  `);
+}
+function confirmCancelFD(fdId){
+  const fds=DB.fds.map(f => f.id===fdId && f.status==='active' ? {...f, status:'cancelled', cancelledAt:new Date().toISOString()} : f);
+  const fd = fds.find(f=>f.id===fdId);
+  if(!fd || fd.status !== 'cancelled'){ return; }
+  const s=getSettings();
+  const penalty = fd.amount * (s.fdPenalty/100);
+  const refund = fd.amount - penalty;
+  DB.fds = fds;
+  const users = DB.users.map(u => u.phone===fd.userPhone ? {...u, balance: u.balance + refund} : u);
+  DB.users = users;
+  DB.tx = [...DB.tx, {
+    txId:genTxId(), type:'FDR ক্যান্সেল',
+    from:'FDR:'+fd.id, to:fd.userPhone, amount: refund, time: Date.now(),
+    note: `পেনাল্টি: ৳${penalty.toFixed(2)}`
+  }];
+  toast('✅ FDR ক্যান্সেল','success');
+  closeModal();renderMyFDs();
+}
+
+/* ============================================================
+   REFERRAL USER ACTIONS
+   ============================================================ */
+function copyRefCode(){
+  if(!currentUser)return;
+  const code = currentUser.referralCode;
+  navigator.clipboard.writeText(code).then(()=>toast('📋 কপি হয়েছে','success')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('📋 কপি হয়েছে','success');
+  });
+}
+function shareRefCode(){
+  if(!currentUser)return;
+  const code = currentUser.referralCode;
+  const text = `🎁 সিদরাতুল ইসলামী ব্যাংকে যোগ দিন!\n\nআমার রেফারেল কোড: ${code}\n\n✅ নতুন একাউন্টে ১০৳ বোনাস\n✅ ১-৫ বছর মেয়াদে FDR সুবিধা\n✅ নিরাপদ ইসলামী ব্যাংকিং`;
+  if(navigator.share){
+    navigator.share({title:'সিদরাতুল ইসলামী ব্যাংক — রেফারেল',text}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text);
+    toast('📋 টেক্সট কপি হয়েছে','success');
+  }
+}
+function withdrawReferral(){
+  if(!currentUser)return;
+  const s = getSettings();
+  const stats = getUserRefStats(currentUser.phone);
+  if(stats.available < s.refMinWithdraw){
+    toast(`কমপক্ষে ৳${s.refMinWithdraw}`,'error');
+    return;
+  }
+  const me = DB.users.find(u=>u.id===currentUser.id);
+  const converted = checkAndAutoConvertRef(me);
+  if(converted){
+    toast('✅ প্রসেস সম্পন্ন','success');
+    setTimeout(()=>renderDashboard(), 500);
+  }
+}
+
+/* ============================================================
+   REGISTER
+   ============================================================ */
+function register(){
+  const name=regName.value.trim(),phone=regPhone.value.trim(),pass=regPass.value;
+  const nid=regNid.value.trim(),dob=regDob.value,address=regAddress.value.trim();
+  const type=regType.value,agree=regAgree.checked;
+  const refCode=regRefCode.value.trim().toUpperCase();
+  const nidFront=imageStore['regNidFront'];
+  const nidBack=imageStore['regNidBack'];
+  const selfie=imageStore['regSelfie'];
+
+  if(!name||!phone||!pass||!nid||!dob||!address){showMsg('regMsg','সব ঘর পূরণ','error');return;}
+  if(!/^01\d{9}$/.test(phone)){showMsg('regMsg','সঠিক ফোন','error');return;}
+  if(pass.length<6){showMsg('regMsg','পাসওয়ার্ড ৬+','error');return;}
+  if(!nidFront){showMsg('regMsg','NID সামনের ছবি দিন','error');return;}
+  if(!nidBack){showMsg('regMsg','NID পেছনের ছবি দিন','error');return;}
+  if(!selfie){showMsg('regMsg','NID সেলফি বাধ্যতামূলক!','error');return;}
+  if(!agree){showMsg('regMsg','শর্তাবলী মেনে নিন','error');return;}
+
+  const users=DB.users;
+  if(users.find(u=>u.phone===phone)){showMsg('regMsg','ফোন আছে','error');return;}
+  if(users.find(u=>u.nid===nid)){showMsg('regMsg','NID আছে','error');return;}
+
+  let referrer = null;
+  if(refCode){
+    referrer = findUserByRefCode(refCode);
+    if(!referrer){showMsg('regMsg','ভুল রেফারেল কোড','error');return;}
+    if(referrer.phone===phone){showMsg('regMsg','নিজের কোড নয়','error');return;}
+  }
+
+  const secret=genSecret();
+  let newRefCode = genRefCode();
+  while(users.find(u=>u.referralCode===newRefCode)) newRefCode = genRefCode();
+
+  const user={
+    id:'U'+Date.now(),name,phone,pass,nid,dob,address,type,
+    balance:0,
+    currencies:{BDT:0,USD:0,EUR:0,SAR:0,AED:0,MYR:0},
+    secret,has2FA:true,
+    images:{nidFront, nidBack, selfie},
+    referralCode: newRefCode,
+    referredBy: referrer ? referrer.referralCode : null,
+    referralEarnings: 0,
+    refAutoFdCount: 0,
+    verified:false,active:true,locked:false,failedAttempts:0,
+    lockedAt:null,lockReason:'',
+    passwordChanges:0,lastPasswordChange:null,passwordHistory:[],
+    createdAt:new Date().toISOString()
+  };
+
+  DB.users = [...users, user];
+
+  if(referrer){
+    const s = getSettings();
+    const ref = {
+      id: 'R'+Date.now(),
+      referrerCode: referrer.referralCode,
+      referrerPhone: referrer.phone,
+      referrerName: referrer.name,
+      newUserPhone: phone,
+      newUserName: name,
+      referrerBonus: s.refBonus,
+      newUserBonus: s.newUserBonus,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      approvedAt: null,
+      approvedBy: null
+    };
+    DB.refs = [...DB.refs, ref];
+  }
+
+  toast('রেজিস্ট্রেশন সফল!','success');
+  const uri=otpUri(secret,phone);
+  openModal(`
+    <h3>🔐 Google Authenticator</h3>
+    <div id="qrHolder" style="text-align:center;padding:14px;background:#fff;border-radius:12px;width:fit-content;margin:0 auto"></div>
+    <div class="otp-secret" style="margin-top:10px">${secret}</div>
+    <p class="small" style="text-align:center;margin-top:8px;color:var(--accent-light)">
+      🎁 <b>আপনার রেফারেল কোড: ${newRefCode}</b><br>
+      <span style="font-size:10px">প্রত্যেক রেফারে ৭০৳ বোনাস পাবেন!</span>
+    </p>
+    <p class="small" style="text-align:center;color:#fbbf24">⏳ এডমিন অনুমোদনের পর লগইন করতে পারবেন</p>
+    <button onclick="closeModal();switchTab('login');loginPhone.value='${phone}'">✅ বুঝেছি</button>
+  `);
+  setTimeout(()=>{const h=document.getElementById('qrHolder');if(h&&window.QRCode)new QRCode(h,{text:uri,width:180,height:180,colorDark:'#0a1f17',colorLight:'#fff'});},100);
+  Object.keys(imageStore).forEach(k=>delete imageStore[k]);
+}
+document.getElementById('regRefCode').addEventListener('input',function(){
+  const code=this.value.trim().toUpperCase();
+  const el=document.getElementById('refCodeCheck');
+  if(!code){el.textContent='';return;}
+  const u = findUserByRefCode(code);
+  if(u){ el.textContent=`✅ ${u.name} — রেফারকারী পাওয়া গেছে`; el.style.color='#4ade80'; }
+  else { el.textContent='❌ ভুল কোড'; el.style.color='#f87171'; }
+});
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+function login(){
+  const phone=loginPhone.value.trim(),pass=loginPass.value,otp=loginOtp.value.trim();
+  const user=DB.users.find(u=>u.phone===phone);
+  document.getElementById('loginLockBanner').innerHTML='';
+  showMsg('loginMsg','','info');
+  if(!user){ showMsg('loginMsg','ইউজার নেই','error'); return; }
+  if(user.locked){ showLockedBanner(user); return; }
+  if(!user.active){
+    showMsg('loginMsg',`🚫 ব্লকড। কাস্টমার কেয়ার ${CC()}`,'error'); return;
+  }
+  if(user.pass!==pass){
+    const newAttempts = (user.failedAttempts||0) + 1;
+    const s = getSettings();
+    if(newAttempts >= MAX_FAILED_ATTEMPTS && s.autoLock){
+      const users = DB.users.map(u => u.id===user.id ? {...u, locked:true, active:false, failedAttempts:newAttempts, lockedAt:new Date().toISOString(), lockReason:`${MAX_FAILED_ATTEMPTS} বার ভুল`} : u);
+      DB.users = users;
+      DB.tx = [...DB.tx, {txId:genTxId(),type:'একাউন্ট অটো-লক',from:user.phone,to:'system',amount:0,time:Date.now(),note:`${MAX_FAILED_ATTEMPTS} বার ভুল`}];
+      showLockedBanner({...user, lockReason:`${MAX_FAILED_ATTEMPTS} বার ভুল`});
+      toast('🚫 লক!','error');
+    } else {
+      const users = DB.users.map(u => u.id===user.id ? {...u, failedAttempts:newAttempts} : u);
+      DB.users = users;
+      const left = MAX_FAILED_ATTEMPTS - newAttempts;
+      showMsg('loginMsg',`❌ ভুল। আরও ${left} বার`,'error');
+    }
+    return;
+  }
+  DB.users = DB.users.map(u => u.id===user.id ? {...u, failedAttempts:0} : u);
+  if(!user.verified){ showMsg('loginMsg','ভেরিফাই হয়নি','warning'); return; }
+  if(user.has2FA){
+    if(!verifyOtp(user.secret,otp)){
+      showMsg('loginMsg',`2FA ভুল। বর্তমান: ${totp(user.secret)}`,'error');return;
+    }
+  }
+  currentUser=user;isAdmin=false;
+  document.querySelector('.tab[data-tab="login"]').style.display='none';
+  document.querySelector('.tab[data-tab="register"]').style.display='none';
+  document.querySelector('.tab[data-tab="dashboard"]').style.display='block';
+  switchTab('dashboard');
+  toast(`স্বাগতম, ${user.name}!`,'success');
+  renderDashboard();
+}
+function showLockedBanner(user){
+  const s = getSettings();
+  document.getElementById('loginLockBanner').innerHTML=`
+    <div class="locked-banner">
+      <div class="big">🔒</div>
+      <h3>একাউন্ট লক</h3>
+      <p class="small" style="margin:8px 0 12px">${user.lockReason||'নিরাপত্তা'}</p>
+      <div class="cc-display">
+        <div class="small" style="color:var(--text-dim)">${s.ccLabel}</div>
+        <div class="num">${s.ccNumber}</div>
+        <a href="tel:${s.ccNumber}" style="display:inline-block;text-decoration:none;color:#fff;background:linear-gradient(135deg,#16a34a,#0d5c3f);padding:10px 24px;border-radius:10px;font-weight:700;font-size:13px">📞 কল</a>
+      </div>
+    </div>
+  `;
+}
+function logout(){
+  currentUser=null;
+  document.querySelector('.tab[data-tab="login"]').style.display='block';
+  document.querySelector('.tab[data-tab="register"]').style.display='block';
+  document.querySelector('.tab[data-tab="dashboard"]').style.display='none';
+  document.getElementById('loginLockBanner').innerHTML='';
+  switchTab('login');
+  loginPass.value='';loginOtp.value='';
+  toast('লগআউট','info');
+}
+function openForgotPass(){
+  const s = getSettings();
+  openModal(`
+    <h3>🔑 পাসওয়ার্ড রিসেট</h3>
+    <div class="cc-display">
+      <div class="small" style="color:var(--text-dim)">${s.ccLabel}</div>
+      <div class="num">${s.ccNumber}</div>
+      <a href="tel:${s.ccNumber}" style="display:inline-block;text-decoration:none;color:#fff;background:linear-gradient(135deg,#16a34a,#0d5c3f);padding:12px 28px;border-radius:12px;font-weight:700;margin-top:8px">📞 কল</a>
+    </div>
+    <button onclick="closeModal()">বন্ধ</button>
+  `);
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  if(!currentUser)return;
+  const u=DB.users.find(x=>x.id===currentUser.id);
+  if(!u){logout();return;}
+  currentUser=u;
+  dashBalance.textContent='৳ '+u.balance.toFixed(2);
+  dashInfo.textContent=`${u.name} • ${u.type==='agent'?'এজেন্ট':'ইউজার'} • ${u.phone}`;
+  if(u.verified){dashChip.innerHTML='✅ ভেরিফাইড';verifyWarning.classList.add('hidden');}
+  else{dashChip.innerHTML='⏳ পেন্ডিং';verifyWarning.classList.remove('hidden');}
+
+  if(u.type==='agent'){
+    userMenu.style.display='none';
+    agentMenu.style.display='block';
+    renderAgentPending();
+    renderHistory('agentHistory',u);
+    showQR('agentQrBox','agentSecretBox',u);
+    const st=document.getElementById('agent2faStatus'),bg=document.getElementById('agent2faBadge');
+    if(st)st.textContent=u.has2FA?'✅ সক্রিয়':'❌ বন্ধ';
+    if(bg){bg.textContent=u.has2FA?'🔐 চালু':'🔓 বন্ধ';bg.className='badge '+(u.has2FA?'verified':'nofa');}
+  } else {
+    userMenu.style.display='block';
+    agentMenu.style.display='none';
+    renderHistory('userHistory',u);
+    showQR('userQrBox','userSecretBox',u);
+    renderReferralUI(u);
+    if(currentFdTab==='my') renderMyFDs();
+    else calcFD();
+    const st=document.getElementById('user2faStatus'),bg=document.getElementById('user2faBadge');
+    if(st)st.textContent=u.has2FA?'✅ সক্রিয়':'❌ বন্ধ';
+    if(bg){bg.textContent=u.has2FA?'🔐 চালু':'🔓 বন্ধ';bg.className='badge '+(u.has2FA?'verified':'nofa');}
+  }
+}
+function renderReferralUI(u){
+  const s = getSettings();
+  const stats = getUserRefStats(u.phone);
+  const codeEl = document.getElementById('myRefCode');
+  if(codeEl) codeEl.textContent = u.referralCode || '-';
+  const phoneEl = document.getElementById('myRefPhone');
+  if(phoneEl) phoneEl.textContent = `📱 ${u.phone}`;
+  document.getElementById('refTotalRefs').textContent = stats.total;
+  document.getElementById('refPending').textContent = '৳ ' + stats.pendingAmount.toLocaleString('bn-BD');
+  document.getElementById('refAvailable').textContent = '৳ ' + stats.available.toLocaleString('bn-BD');
+  document.getElementById('refEarned').textContent = '৳ ' + stats.earned.toLocaleString('bn-BD');
+  const pct = Math.min(100, (stats.available/s.refMinWithdraw)*100);
+  document.getElementById('refProgressFill').style.width = pct + '%';
+  document.getElementById('refProgressText').textContent = `৳${stats.available.toLocaleString('bn-BD')} / ৳${s.refMinWithdraw.toLocaleString('bn-BD')}`;
+  const btn = document.getElementById('refWithdrawBtn');
+  if(stats.available >= s.refMinWithdraw){
+    btn.disabled = false;
+    document.getElementById('refWithdrawInfo').textContent = '✅ উত্তোলনের জন্য প্রস্তুত!';
+  } else {
+    btn.disabled = true;
+    const need = s.refMinWithdraw - stats.available;
+    document.getElementById('refWithdrawInfo').textContent = `আরও ৳${need.toLocaleString('bn-BD')} প্রয়োজন হলে উত্তোলন করা যাবে`;
+  }
+  const list = document.getElementById('refList');
+  const refs = DB.refs.filter(r=>r.referrerPhone===u.phone);
+  if(refs.length===0){
+    list.innerHTML = '<p class="small" style="text-align:center;padding:12px">এখনো কাউকে রেফার করেননি<br>বন্ধুদের সাথে আপনার কোড শেয়ার করুন</p>';
+  } else {
+    list.innerHTML = refs.slice().reverse().map(r=>{
+      const cls = r.status==='approved'?'approved':(r.status==='rejected'?'rejected':'pending');
+      const icon = r.status==='approved'?'✅ অনুমোদিত':(r.status==='rejected'?'❌ বাতিল':'⏳ পেন্ডিং');
+      return `<div class="ref-list-item ${cls}">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><b>${r.newUserName}</b><br>
+            <span class="small">📱 ${r.newUserPhone.slice(-4)}xxxx • ${new Date(r.createdAt).toLocaleDateString('bn-BD')}</span></div>
+          <div style="text-align:right">
+            <div style="color:#4ade80;font-weight:800">+৳${r.referrerBonus}</div>
+            <span class="small">${icon}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+function showQR(qrId,secretId,u){
+  const box=document.getElementById(qrId),sb=document.getElementById(secretId);
+  if(!box)return;box.innerHTML='';sb.textContent=u.secret||'-';
+  if(window.QRCode&&u.secret)new QRCode(box,{text:otpUri(u.secret,u.phone),width:130,height:130,colorDark:'#0a1f17',colorLight:'#fff'});
+}
+function renderHistory(elId,u){
+  const el=document.getElementById(elId);if(!el)return;
+  const txs=DB.tx.filter(t=>t.from===u.phone||t.to===u.phone).slice(0,20);
+  if(txs.length===0){el.innerHTML='<p class="small" style="text-align:center;padding:15px">কোন লেনদেন নেই</p>';return;}
+  el.innerHTML=txs.map(t=>{
+    const isIn=t.to===u.phone;
+    return `<div class="tx-row" onclick="viewTxDetail('${t.txId}')">
+      <div class="left"><b>${t.type}</b>
+        <div class="txid">🆔 ${t.txId}</div>
+        <div class="time">🕐 ${new Date(t.time).toLocaleString('bn-BD',{hour12:true})}</div>
+      </div>
+      <div class="amount ${isIn?'in':'out'}">${isIn?'+':'-'}৳${t.amount.toFixed(2)}</div>
+    </div>`;
+  }).join('');
+}
+function viewTxDetail(txId){
+  const t=DB.tx.find(x=>x.txId===txId);
+  if(!t){toast('পাওয়া যায়নি','error');return;}
+  const isIn=currentUser&&t.to===currentUser.phone;
+  openModal(`
+    <h3>📜 বিস্তারিত</h3>
+    <div class="card">
+      <div style="text-align:center;padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:12px">
+        <div style="font-size:28px;font-weight:800;color:${isIn?'#4ade80':'#f87171'};margin:6px 0">${isIn?'+':'-'}৳${t.amount.toFixed(2)}</div>
+      </div>
+      <div class="tx-detail-line"><span class="k">🆔 আইডি</span><span class="v" style="font-family:monospace;color:var(--accent-light)">${t.txId}</span></div>
+      <div class="tx-detail-line"><span class="k">📋 ধরন</span><span class="v">${t.type}</span></div>
+      <div class="tx-detail-line"><span class="k">📤 প্রেরক</span><span class="v">${t.from}</span></div>
+      <div class="tx-detail-line"><span class="k">📥 প্রাপক</span><span class="v">${t.to}</span></div>
+      <div class="tx-detail-line"><span class="k">💰 পরিমাণ</span><span class="v">৳${t.amount.toFixed(2)}</span></div>
+      <div class="tx-detail-line"><span class="k">📅 তারিখ</span><span class="v">${new Date(t.time).toLocaleDateString('bn-BD')}</span></div>
+      <div class="tx-detail-line"><span class="k">🕐 সময়</span><span class="v">${new Date(t.time).toLocaleTimeString('bn-BD',{hour12:true})}</span></div>
+      ${t.note?`<div class="tx-detail-line"><span class="k">📝 নোট</span><span class="v">${t.note}</span></div>`:''}
+    </div>
+    <button onclick="closeModal()">বন্ধ</button>
+  `);
+}
+
+/* ============================================================
+   TRANSACTIONS
+   ============================================================ */
+function transferUser(){
+  const target=tfPhone.value.trim(),amt=parseFloat(tfAmount.value);
+  if(!target||!amt||amt<=0){toast('সঠিক তথ্য','error');return;}
+  if(target===currentUser.phone){toast('নিজের কাছে নয়','error');return;}
+  if(currentUser.balance<amt){toast('ব্যালেন্স নেই','error');return;}
+  const other=DB.users.find(u=>u.phone===target);
+  if(!other){toast('প্রাপক নেই','error');return;}
+  if(other.type!=='user'){toast('শুধু ইউজার','error');return;}
+  if(!other.active||other.locked){toast('প্রাপক নিষ্ক্রিয়','error');return;}
+  const users = DB.users.map(u => {
+    if(u.id===currentUser.id) return {...u, balance: u.balance - amt};
+    if(u.id===other.id) return {...u, balance: u.balance + amt};
+    return u;
+  });
+  DB.users = users;
+  DB.tx = [...DB.tx,{txId:genTxId(),type:'ইউজার→ইউজার',from:currentUser.phone,to:other.phone,amount:amt,time:Date.now()}];
+  toast(`৳${amt} পাঠানো`,'success');
+  tfPhone.value='';tfAmount.value='';
+}
+function cashOut(){
+  const ap=coAgent.value.trim(),amt=parseFloat(coAmount.value);
+  if(!ap||!amt||amt<=0){toast('সঠিক তথ্য','error');return;}
+  const s=getSettings();
+  const fee=amt*(s.cashoutFee/100),total=amt+fee;
+  if(currentUser.balance<total){toast(`মোট ৳${total.toFixed(2)}`,'error');return;}
+  const agent=DB.users.find(u=>u.phone===ap&&u.type==='agent');
+  if(!agent){toast('এজেন্ট নেই','error');return;}
+  if(!agent.active||agent.locked){toast('এজেন্ট নিষ্ক্রিয়','error');return;}
+  DB.pending=[...DB.pending,{id:'P'+Date.now(),userPhone:currentUser.phone,agentPhone:ap,amount:amt,fee,total,time:Date.now()}];
+  toast('অনুরোধ পাঠানো','info');
+  coAgent.value='';coAmount.value='';
+}
+function renderAgentPending(){
+  const el=document.getElementById('agentPending');if(!el)return;
+  const list=DB.pending.filter(p=>p.agentPhone===currentUser.phone);
+  if(list.length===0){el.innerHTML='<p class="small" style="text-align:center;padding:12px">কোন অনুরোধ নেই</p>';return;}
+  el.innerHTML=list.map(p=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <div><b>${p.userPhone}</b><br><span class="small">${new Date(p.time).toLocaleString('bn-BD')}</span></div>
+        <div style="text-align:right"><b style="color:var(--accent-light);font-size:16px">৳${p.amount.toFixed(2)}</b></div>
+      </div>
+      <div class="row2">
+        <button onclick="approveCashOut('${p.id}')">✅ অনুমোদন</button>
+        <button class="danger" onclick="rejectCashOut('${p.id}')">❌ বাতিল</button>
+      </div>
+    </div>`).join('');
+}
+function approveCashOut(id){
+  const p=DB.pending.find(x=>x.id===id);if(!p)return;
+  const s=getSettings();
+  const user=DB.users.find(u=>u.phone===p.userPhone);
+  const agent=DB.users.find(u=>u.phone===p.agentPhone);
+  if(!user||!agent){toast('ডেটা ত্রুটি','error');return;}
+  if(user.balance<p.total){toast('ব্যালেন্স কম','error');return;}
+  const cm=p.amount*(s.agentCommission/100);
+  const users = DB.users.map(u => {
+    if(u.id===user.id) return {...u, balance: u.balance - p.total};
+    if(u.id===agent.id) return {...u, balance: u.balance + cm};
+    return u;
+  });
+  DB.users = users;
+  DB.pending = DB.pending.filter(x=>x.id!==id);
+  DB.tx = [...DB.tx,
+    {txId:genTxId(),type:'ক্যাশ আউট',from:user.phone,to:agent.phone,amount:p.amount,fee:p.fee,time:Date.now()},
+    {txId:genTxId(),type:'এজেন্ট কমিশন',from:'system',to:agent.phone,amount:cm,time:Date.now()}
+  ];
+  toast('অনুমোদিত','success');
+}
+function rejectCashOut(id){
+  DB.pending=DB.pending.filter(x=>x.id!==id);
+  toast('বাতিল','info');
+}
+function cashIn(){
+  const up=ciUser.value.trim(),amt=parseFloat(ciAmount.value);
+  if(!up||!amt||amt<=0){toast('সঠিক তথ্য','error');return;}
+  if(currentUser.balance<amt){toast('ব্যালেন্স কম','error');return;}
+  const user=DB.users.find(u=>u.phone===up&&u.type==='user');
+  if(!user){toast('ইউজার নেই','error');return;}
+  const s=getSettings();
+  const cm=amt*(s.cashinFee/100);
+  const users = DB.users.map(u => {
+    if(u.id===currentUser.id) return {...u, balance: u.balance - amt + cm};
+    if(u.id===user.id) return {...u, balance: u.balance + amt};
+    return u;
+  });
+  DB.users = users;
+  DB.tx = [...DB.tx,
+    {txId:genTxId(),type:'ক্যাশ ইন',from:currentUser.phone,to:user.phone,amount:amt,time:Date.now()},
+    {txId:genTxId(),type:'এজেন্ট কমিশন',from:'system',to:currentUser.phone,amount:cm,time:Date.now()}
+  ];
+  toast(`সফল। কমিশন ৳${cm.toFixed(2)}`,'success');
+  ciUser.value='';ciAmount.value='';
+}
+function agentToAgent(){
+  const target=aaAgent.value.trim(),amt=parseFloat(aaAmount.value);
+  if(!target||!amt||amt<=0){toast('সঠিক তথ্য','error');return;}
+  if(target===currentUser.phone){toast('নিজের কাছে নয়','error');return;}
+  if(currentUser.balance<amt){toast('ব্যালেন্স নেই','error');return;}
+  const other=DB.users.find(u=>u.phone===target&&u.type==='agent');
+  if(!other){toast('এজেন্ট নেই','error');return;}
+  const users = DB.users.map(u => {
+    if(u.id===currentUser.id) return {...u, balance: u.balance - amt};
+    if(u.id===other.id) return {...u, balance: u.balance + amt};
+    return u;
+  });
+  DB.users = users;
+  DB.tx = [...DB.tx,{txId:genTxId(),type:'এজেন্ট→এজেন্ট',from:currentUser.phone,to:other.phone,amount:amt,time:Date.now()}];
+  toast('সফল (ফি ০%)','success');
+  aaAgent.value='';aaAmount.value='';
+}
+function agentUnlockAccount(){
+  const phone=unlockUserPhone.value.trim();
+  const nid=unlockUserNid.value.trim();
+  const newPass=unlockNewPass.value.trim();
+  if(!phone||!nid){toast('ফোন + NID দিন','error');return;}
+  const user=DB.users.find(u=>u.phone===phone&&u.nid===nid);
+  if(!user){toast('মিলছে না','error');return;}
+  const updates = { locked:false, active:true, failedAttempts:0, lockedAt:null, lockReason:'', verified:true };
+  if(newPass){
+    if(newPass.length<6){toast('৬ অক্ষর','error');return;}
+    const history = user.passwordHistory||[];
+    history.push({pass:user.pass,changedAt:new Date().toISOString()});
+    updates.passwordHistory = history;
+    updates.pass = newPass;
+    updates.passwordChanges = (user.passwordChanges||0)+1;
+    updates.lastPasswordChange = new Date().toISOString();
+  }
+  DB.users = DB.users.map(u => u.id===user.id ? {...u, ...updates} : u);
+  toast(`✅ ${user.name} আনলক`,'success');
+  unlockUserPhone.value='';unlockUserNid.value='';unlockNewPass.value='';
+}
+
+/* ============================================================
+   USER CHANGE PASSWORD
+   ============================================================ */
+function userChangePassword(){
+  if(!currentUser)return;
+  openModal(`
+    <h3>🔑 পাসওয়ার্ড</h3>
+    <label>পুরাতন</label>
+    <input type="password" id="uOldPass">
+    <label>নতুন</label>
+    <input type="password" id="uNewPass1">
+    <label>আবার</label>
+    <input type="password" id="uNewPass2">
+    <div id="uPassMsg" class="msg"></div>
+    <button class="gold" onclick="confirmUserChangePassword()">🔐 পরিবর্তন</button>
+    <button class="ghost" onclick="closeModal()">বাতিল</button>
+  `);
+}
+function confirmUserChangePassword(){
+  const oP=document.getElementById('uOldPass').value;
+  const p1=document.getElementById('uNewPass1').value;
+  const p2=document.getElementById('uNewPass2').value;
+  if(oP!==currentUser.pass){showMsg('uPassMsg','পুরাতন ভুল','error');return;}
+  if(!p1||p1.length<6){showMsg('uPassMsg','৬ অক্ষর','error');return;}
+  if(p1!==p2){showMsg('uPassMsg','মিলছে না','error');return;}
+  if(p1===oP){showMsg('uPassMsg','আলাদা দিন','error');return;}
+  const u = currentUser;
+  const history = u.passwordHistory||[];
+  history.push({pass:u.pass,changedAt:new Date().toISOString()});
+  DB.users = DB.users.map(x => x.id===u.id ? {...x, pass:p1, passwordHistory:history, passwordChanges:(u.passwordChanges||0)+1, lastPasswordChange:new Date().toISOString(), failedAttempts:0} : x);
+  DB.tx = [...DB.tx,{txId:genTxId(),type:'পাসওয়ার্ড পরিবর্তন',from:u.phone,to:u.phone,amount:0,time:Date.now(),note:'নিজে'}];
+  showMsg('uPassMsg','✅ সফল','success');
+  setTimeout(()=>{closeModal();},1200);
+}
+function userViewSecurity(){
+  if(!currentUser)return;
+  const u=DB.users.find(x=>x.id===currentUser.id);
+  const log=u.passwordHistory||[];
+  const stats = getUserRefStats(u.phone);
+  openModal(`
+    <h3>📊 সিকিউরিটি</h3>
+    <div class="card">
+      <div class="tx-detail-line"><span class="k">🔐 2FA</span><span class="v">${u.has2FA?'✅':'❌'}</span></div>
+      <div class="tx-detail-line"><span class="k">📊 চেঞ্জ</span><span class="v">${u.passwordChanges||0}</span></div>
+      <div class="tx-detail-line"><span class="k">🎁 রেফারেল কোড</span><span class="v" style="font-family:monospace">${u.referralCode}</span></div>
+      <div class="tx-detail-line"><span class="k">👥 রেফারেল</span><span class="v">${stats.total}টি</span></div>
+      <div class="tx-detail-line"><span class="k">💰 আয়</span><span class="v">৳${stats.earned}</span></div>
+    </div>
+    <button onclick="closeModal()">বন্ধ</button>
+  `);
+}
+
+/* ============================================================
+   HIDDEN ADMIN
+   ============================================================ */
+let clickCount=0,clickTimer=null;
+document.getElementById('mainHeader').addEventListener('click',e=>{
+  if(e.target.closest('.theme-toggle'))return;
+  clickCount++;
+  clearTimeout(clickTimer);
+  clickTimer=setTimeout(()=>clickCount=0,1300);
+  if(clickCount>=5){clickCount=0;toast('🔓 এডমিন','info');openAdmin();}
+});
+function openAdmin(){
+  document.getElementById('mainApp').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
+  document.getElementById('adminDashboard').style.display='none';
+  document.getElementById('headerTitle').textContent='🔐 এডমিন এক্সেস';
+  document.getElementById('headerSub').textContent='সুরক্ষিত এলাকা';
+  document.getElementById('statusBar').style.display='none';
+  adminUser.value=getAdmin().username;
+}
+function closeAdmin(){
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('adminDashboard').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+  document.getElementById('statusBar').style.display='flex';
+  applyBranding();
+}
+function adminLogin(){
+  const a=getAdmin();
+  const u=adminUser.value.trim(),p=adminPass.value,otp=adminOtp.value.trim();
+  if(u!==a.username||p!==a.password){showMsg('adminMsg','ভুল','error');return;}
+  if(a.has2FA){
+    if(!verifyOtp(a.secret,otp)){showMsg('adminMsg',`2FA ভুল। বর্তমান: ${totp(a.secret)}`,'error');return;}
+  }
+  isAdmin=true;
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('adminDashboard').style.display='block';
+  document.getElementById('headerTitle').textContent='👑 এডমিন';
+  document.getElementById('headerSub').textContent='সম্পূর্ণ নিয়ন্ত্রণ';
+  toast('এডমিন লগইন সফল','success');
+  renderAdmin();
+}
+function adminLogout(){isAdmin=false;closeAdmin();toast('লগআউট','info');}
+function adminTab(name,btn){
+  document.querySelectorAll('.admin-bar button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['verify','refs','locked','users','fds','tx','ctrl','settings','self'].forEach(n=>{
+    const el=document.getElementById('admin'+n.charAt(0).toUpperCase()+n.slice(1)+'Tab');
+    if(el)el.classList.toggle('hidden',n!==name);
+  });
+  if(name==='self')renderAdminSelf();
+  if(name==='settings')loadSettings();
+}
+
+let searchType='all';
+function setSearchType(t,btn){
+  searchType=t;
+  document.querySelectorAll('.search-type button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');liveSearch();
+}
+function liveSearch(){
+  const q=(document.getElementById('adminSearch').value||'').trim().toLowerCase();
+  const box=document.getElementById('searchResults');
+  if(!q){box.innerHTML='';return;}
+  const users=DB.users.filter(u=>{
+    const p=u.phone.toLowerCase().includes(q);
+    const n=(u.nid||'').toLowerCase().includes(q);
+    const rc=(u.referralCode||'').toLowerCase().includes(q);
+    if(searchType==='phone')return p;
+    if(searchType==='nid')return n;
+    return p||n||rc;
+  });
+  if(users.length===0){box.innerHTML=`<div class="msg error" style="display:block">❌ পাওয়া যায়নি</div>`;return;}
+  box.innerHTML=`<p class="small" style="margin-bottom:6px">${users.length}টি</p>`+users.map(u=>`
+    <div class="user-detail-row" onclick="viewUserDetail('${u.id}')">
+      ${u.images&&u.images.photo?`<img class="thumb" src="${u.images.photo}">`:`<div class="thumb">👤</div>`}
+      <div class="info">
+        <b>${u.name}</b>
+        <span class="badge ${u.type}">${u.type==='agent'?'এজেন্ট':'ইউজার'}</span>
+        <span class="badge ${u.locked?'locked':(u.active?'active':'blocked')}">${u.locked?'🔒':(u.active?'✅':'🚫')}</span>
+        <div class="line">📱 ${u.phone}</div>
+        <div class="line">🎁 ${u.referralCode||'-'}</div>
+        <div class="line">💰 <b style="color:var(--accent-light)">৳${u.balance.toFixed(2)}</b></div>
+      </div>
+    </div>`).join('');
+}
+function viewUserDetail(userId){
+  const u=DB.users.find(x=>x.id===userId);if(!u){toast('নেই','error');return;}
+  const userFds = DB.fds.filter(f=>f.userPhone===u.phone);
+  const refStats = getUserRefStats(u.phone);
+  openModal(`
+    <h3>👤 ${u.name}</h3>
+    <div class="card">
+      <div class="tx-detail-line"><span class="k">📱 ফোন</span><span class="v">${u.phone}</span></div>
+      <div class="tx-detail-line"><span class="k">🆔 NID</span><span class="v">${u.nid}</span></div>
+      <div class="tx-detail-line"><span class="k">💰 ব্যালেন্স</span><span class="v" style="color:var(--accent-light)">৳${u.balance.toFixed(2)}</span></div>
+      <div class="tx-detail-line"><span class="k">🎁 রেফারেল কোড</span><span class="v" style="font-family:monospace">${u.referralCode||'-'}</span></div>
+      <div class="tx-detail-line"><span class="k">👥 রেফারেল</span><span class="v">${refStats.total}টি</span></div>
+      <div class="tx-detail-line"><span class="k">💰 আয়</span><span class="v">৳${refStats.available}</span></div>
+      <div class="tx-detail-line"><span class="k">💰 FDR</span><span class="v">${userFds.filter(f=>f.status==='active').length}টি</span></div>
+      <div class="tx-detail-line"><span class="k">🔑 পাসওয়ার্ড</span><span class="v" style="font-family:monospace">${u.pass}</span></div>
+    </div>
+    ${u.images?`<div class="sec-head"><span class="ico">📷</span> ডকুমেন্ট</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      ${u.images.nidFront?`<div><div class="small">NID সামনে</div><img src="${u.images.nidFront}" onclick="viewImage('${u.images.nidFront}')" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border)"></div>`:''}
+      ${u.images.nidBack?`<div><div class="small">NID পেছনে</div><img src="${u.images.nidBack}" onclick="viewImage('${u.images.nidBack}')" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border)"></div>`:''}
+      ${u.images.selfie?`<div><div class="small">সেলফি</div><img src="${u.images.selfie}" onclick="viewImage('${u.images.selfie}')" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid var(--border)"></div>`:''}
+    </div>`:''}
+    <button onclick="closeModal()">বন্ধ</button>
+  `);
+}
+
+/* ============================================================
+   ADMIN RENDER
+   ============================================================ */
+function renderAdmin(){
+  const users=DB.users;
+  const totalBal=users.reduce((s,u)=>s+u.balance,0);
+  const agents=users.filter(u=>u.type==='agent').length;
+  const normalUsers=users.filter(u=>u.type==='user').length;
+  const locked=users.filter(u=>u.locked).length;
+  const pending=users.filter(u=>!u.verified).length;
+  const activeFds=DB.fds.filter(f=>f.status==='active').length;
+  const pendingRefs=DB.refs.filter(r=>r.status==='pending').length;
+
+  document.getElementById('adminStats').innerHTML=`
+    <div class="stat"><div class="v">${users.length}</div><div class="l">মোট</div></div>
+    <div class="stat"><div class="v">${agents}</div><div class="l">এজেন্ট</div></div>
+    <div class="stat"><div class="v">${normalUsers}</div><div class="l">ইউজার</div></div>
+    <div class="stat"><div class="v">৳${totalBal.toFixed(0)}</div><div class="l">ব্যালেন্স</div></div>
+    <div class="stat"><div class="v" style="color:#fbbf24">${pending}</div><div class="l">ভেরিফাই</div></div>
+    <div class="stat"><div class="v" style="color:#f87171">${locked}</div><div class="l">লকড</div></div>
+    <div class="stat"><div class="v" style="color:var(--accent-light)">${activeFds}</div><div class="l">FDR</div></div>
+    <div class="stat"><div class="v" style="color:var(--info)">${pendingRefs}</div><div class="l">🎁 রেফারেল</div></div>
+  `;
+  const refBadge = document.getElementById('refPendingBadge');
+  if(refBadge) refBadge.textContent = pendingRefs > 0 ? pendingRefs : '';
+
+  const pv=document.getElementById('pendingVerifyList');
+  const pend=users.filter(u=>!u.verified&&!u.locked);
+  pv.innerHTML=pend.length?pend.map(u=>`
+    <div class="verify-card">
+      <div class="head">
+        <div><b>${u.name}</b><br><span class="small">📱 ${u.phone} • 🆔 ${u.nid}</span></div>
+        <span class="badge pending">⏳</span>
+      </div>
+      <div class="imgs">
+        ${u.images&&u.images.nidFront?`<img src="${u.images.nidFront}" onclick="viewImage('${u.images.nidFront}')">`:''}
+        ${u.images&&u.images.nidBack?`<img src="${u.images.nidBack}" onclick="viewImage('${u.images.nidBack}')">`:''}
+        ${u.images&&u.images.selfie?`<img src="${u.images.selfie}" onclick="viewImage('${u.images.selfie}')">`:''}
+      </div>
+      <div class="row2">
+        <button class="gold" onclick="quickVerify('${u.id}')">✅ অনুমোদন</button>
+        <button class="danger" onclick="quickBlock('${u.id}')">🚫 ব্লক</button>
+      </div>
+    </div>`).join(''):'<p class="small" style="text-align:center;padding:14px">কোন পেন্ডিং নেই</p>';
+
+  const prl=document.getElementById('pendingRefsList');
+  const prefs=DB.refs.filter(r=>r.status==='pending');
+  if(prefs.length===0){
+    prl.innerHTML='<p class="small" style="text-align:center;padding:14px">কোন পেন্ডিং রেফারেল নেই</p>';
+  } else {
+    prl.innerHTML=prefs.map(r=>`
+      <div class="verify-card" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3)">
+        <div class="head">
+          <div><b>🎁 ${r.newUserName}</b><br><span class="small">📱 ${r.newUserPhone}</span></div>
+          <span class="badge pending">⏳</span>
+        </div>
+        <div class="small" style="margin:6px 0">
+          <b>রেফারকারী:</b> ${r.referrerName} (${r.referrerPhone})<br>
+          <b>কোড:</b> ${r.referrerCode}<br>
+          <b>বোনাস:</b> রেফারকারী +৳${r.referrerBonus} • নতুন +৳${r.newUserBonus}
+        </div>
+        <div class="row2">
+          <button class="gold" onclick="approveRef('${r.id}')">✅ অনুমোদন</button>
+          <button class="danger" onclick="rejectRef('${r.id}')">❌ বাতিল</button>
+        </div>
+      </div>`).join('');
+  }
+
+  const arl=document.getElementById('allRefsList');
+  const allrefs=DB.refs.slice().reverse().slice(0,30);
+  if(allrefs.length===0){
+    arl.innerHTML='<p class="small" style="text-align:center;padding:14px">কোন রেফারেল নেই</p>';
+  } else {
+    arl.innerHTML=allrefs.map(r=>{
+      const cls = r.status==='approved'?'approved':(r.status==='rejected'?'rejected':'pending');
+      return `<div class="ref-list-item ${cls}">
+        <div style="display:flex;justify-content:space-between">
+          <div><b>${r.newUserName}</b> ← ${r.referrerName}<br>
+            <span class="small">${new Date(r.createdAt).toLocaleDateString('bn-BD')}</span></div>
+          <span class="badge ${r.status==='approved'?'verified':(r.status==='rejected'?'cancelled':'pending')}">${r.status}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const lk=document.getElementById('lockedAccountsList');
+  const lockedUsers=users.filter(u=>u.locked);
+  lk.innerHTML=lockedUsers.length?lockedUsers.map(u=>`
+    <div class="verify-card" style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3)">
+      <div class="head">
+        <div><b>${u.name}</b><br><span class="small">📱 ${u.phone}</span></div>
+        <span class="badge locked">🔒</span>
+      </div>
+      <div class="row2">
+        <button class="gold" onclick="adminDirectUnlock('${u.id}')">🔓 আনলক</button>
+      </div>
+    </div>`).join(''):'<p class="small" style="text-align:center;padding:14px">কোন লকড নেই</p>';
+
+  const ul=document.getElementById('allUsersList');
+  const normal=users.filter(u=>u.type==='user');
+  ul.innerHTML=normal.length?normal.map(u=>userAdminRow(u)).join(''):'<p class="small" style="text-align:center;padding:14px">কোন ইউজার নেই</p>';
+
+  renderAdminFdList();
+
+  const tl=document.getElementById('allTxList');
+  const txs=DB.tx.slice(0,30);
+  tl.innerHTML=txs.length?txs.map(t=>`
+    <div class="tx-row" onclick="viewTxDetail('${t.txId}')">
+      <div class="left">
+        <b>${t.type}</b>
+        <div class="txid">🆔 ${t.txId}</div>
+        <div class="time">${t.from} → ${t.to}</div>
+        <div class="time">🕐 ${new Date(t.time).toLocaleString('bn-BD',{hour12:true})}</div>
+      </div>
+      <div class="amount">৳${t.amount.toFixed(2)}</div>
+    </div>`).join(''):'<p class="small" style="text-align:center;padding:14px">কোন লেনদেন নেই</p>';
+}
+function renderAdminFdList(){
+  const fds = DB.fds.slice().reverse();
+  const active = fds.filter(f=>f.status==='active');
+  const totalActive = active.reduce((s,f)=>s+f.amount,0);
+  const totalProfit = active.reduce((s,f)=>s+f.totalProfit,0);
+  document.getElementById('adminFdStats').innerHTML=`
+    <div class="stat"><div class="v">${active.length}</div><div class="l">সক্রিয় FDR</div></div>
+    <div class="stat"><div class="v">৳${totalActive.toFixed(0)}</div><div class="l">মোট জমা</div></div>
+    <div class="stat"><div class="v">৳${totalProfit.toFixed(0)}</div><div class="l">সম্ভাব্য মুনাফা</div></div>
+    <div class="stat"><div class="v">${fds.filter(f=>f.status!=='active').length}</div><div class="l">সম্পন্ন</div></div>
+  `;
+  const el=document.getElementById('allFdList');
+  if(fds.length===0){el.innerHTML='<p class="small" style="text-align:center;padding:14px">কোন FDR নেই</p>';return;}
+  el.innerHTML = fds.map(fd=>`
+    <div class="fd-card">
+      <div class="fd-head">
+        <div><div class="small">${fd.userName} • ${fd.userPhone}</div><div class="fd-id">${fd.id}</div></div>
+        <span class="badge ${fd.status==='active'?'fd':(fd.status==='matured'?'matured':'cancelled')}">${fd.status}</span>
+      </div>
+      <div class="fd-amount">৳ ${fd.amount.toLocaleString('bn-BD',{maximumFractionDigits:2})}</div>
+      <div class="small">${fd.months} মাস • ${fd.rate}%</div>
+    </div>
+  `).join('');
+}
+function userAdminRow(u){
+  const refStats = getUserRefStats(u.phone);
+  return `<div class="user-detail-row" onclick="viewUserDetail('${u.id}')">
+    ${u.images&&u.images.photo?`<img class="thumb" src="${u.images.photo}">`:`<div class="thumb">👤</div>`}
+    <div class="info">
+      <b>${u.name}</b>
+      <span class="badge ${u.type}">${u.type==='agent'?'এজেন্ট':'ইউজার'}</span>
+      <span class="badge ${u.locked?'locked':(u.active?'active':'blocked')}">${u.locked?'🔒':(u.active?'✅':'🚫')}</span>
+      <div class="line">📱 ${u.phone}</div>
+      <div class="line">💰 <b style="color:var(--accent-light)">৳${u.balance.toFixed(2)}</b></div>
+      ${refStats.total?`<div class="line">🎁 ${refStats.total} রেফারেল • ৳${refStats.earned}</div>`:''}
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   REFERRAL ADMIN ACTIONS
+   ============================================================ */
+function approveRef(refId){
+  const ref=DB.refs.find(r=>r.id===refId);if(!ref||ref.status!=='pending')return;
+  const newUser=DB.users.find(u=>u.phone===ref.newUserPhone);
+  const referrer=DB.users.find(u=>u.phone===ref.referrerPhone);
+  if(!newUser){ toast('নতুন ইউজার নেই','error'); return; }
+
+  const refs = DB.refs.map(r => r.id===refId ? {...r, status:'approved', approvedAt:new Date().toISOString(), approvedBy:'admin'} : r);
+  DB.refs = refs;
+
+  // Bonus to new user
+  let users = DB.users.map(u => u.id===newUser.id ? {...u, balance: u.balance + ref.newUserBonus} : u);
+
+  // Bonus to referrer
+  if(referrer){
+    users = users.map(u => u.id===referrer.id ? {...u, referralEarnings: (u.referralEarnings||0) + ref.referrerBonus, totalReferrals: (u.totalReferrals||0)+1} : u);
+  }
+  DB.users = users;
+
+  const newTxs = [{
+    txId: genTxId(), type:'রেফারেল সাইনআপ বোনাস',
+    from:'system', to: newUser.phone, amount: ref.newUserBonus, time:Date.now(),
+    note:'রেফারেল বোনাস'
+  }];
+  if(referrer){
+    newTxs.push({
+      txId: genTxId(), type:'রেফারেল বোনাস',
+      from: newUser.phone, to: referrer.phone, amount: ref.referrerBonus, time:Date.now(),
+      note:`${newUser.name} কে রেফার`
+    });
+  }
+  DB.tx = [...DB.tx, ...newTxs];
+
+  // Check auto-conversion for referrer
+  if(referrer){
+    const freshRef = DB.users.find(u=>u.id===referrer.id);
+    if(freshRef) checkAndAutoConvertRef(freshRef);
+  }
+
+  toast('✅ রেফারেল অনুমোদিত','success');
+}
+function rejectRef(refId){
+  DB.refs = DB.refs.map(r => r.id===refId ? {...r, status:'rejected', rejectedAt:new Date().toISOString()} : r);
+  toast('❌ বাতিল','info');
+}
+
+/* ============================================================
+   ADMIN ACTIONS
+   ============================================================ */
+function findUserByInput(inp){
+  const q=(inp||'').trim();if(!q)return null;
+  return DB.users.find(u=>u.phone===q||u.nid===q||u.referralCode===q.toUpperCase());
+}
+function adminCredit(){
+  const u=findUserByInput(ctrlPhone.value),amt=parseFloat(ctrlAmount.value);
+  if(!u){toast('ইউজার নেই','error');return;}
+  if(!amt||amt<=0){toast('পরিমাণ দিন','error');return;}
+  DB.users = DB.users.map(x => x.id===u.id ? {...x, balance: x.balance + amt} : x);
+  DB.tx = [...DB.tx,{txId:genTxId(),type:'এডমিন ক্রেডিট',from:'admin',to:u.phone,amount:amt,time:Date.now()}];
+  toast(`৳${amt} যোগ`,'success');
+}
+function adminDebit(){
+  const u=findUserByInput(ctrlPhone.value),amt=parseFloat(ctrlAmount.value);
+  if(!u){toast('ইউজার নেই','error');return;}
+  if(!amt||amt<=0){toast('পরিমাণ দিন','error');return;}
+  if(u.balance<amt){toast('ব্যালেন্স কম','error');return;}
+  DB.users = DB.users.map(x => x.id===u.id ? {...x, balance: x.balance - amt} : x);
+  DB.tx = [...DB.tx,{txId:genTxId(),type:'এডমিন ডেবিট',from:u.phone,to:'admin',amount:amt,time:Date.now()}];
+  toast(`৳${amt} কাটা`,'success');
+}
+function adminResetPassword(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  openModal(`
+    <h3>🔑 পাসওয়ার্ড রিসেট</h3>
+    <div class="card">
+      <div><b>${u.name}</b></div>
+      <div class="small">🔓 পুরাতন: <code style="color:var(--accent-light)">${u.pass}</code></div>
+    </div>
+    <label>নতুন</label>
+    <input type="text" id="newPass1">
+    <label>আবার</label>
+    <input type="text" id="newPass2">
+    <div id="resetMsg" class="msg"></div>
+    <button class="gold" onclick="confirmResetPassword('${u.id}')">🔐 রিসেট</button>
+    <button class="ghost" onclick="closeModal()">বাতিল</button>
+  `);
+}
+function confirmResetPassword(userId){
+  const p1=document.getElementById('newPass1').value;
+  const p2=document.getElementById('newPass2').value;
+  if(!p1||p1.length<6){showMsg('resetMsg','৬ অক্ষর','error');return;}
+  if(p1!==p2){showMsg('resetMsg','মিলছে না','error');return;}
+  const u=DB.users.find(x=>x.id===userId);if(!u)return;
+  const history = u.passwordHistory||[];
+  history.push({pass:u.pass,changedAt:new Date().toISOString()});
+  DB.users = DB.users.map(x => x.id===userId ? {...x, pass:p1, passwordHistory:history, passwordChanges:(u.passwordChanges||0)+1, lastPasswordChange:new Date().toISOString(), failedAttempts:0} : x);
+  DB.tx=[...DB.tx,{txId:genTxId(),type:'পাসওয়ার্ড রিসেট',from:'admin',to:u.phone,amount:0,time:Date.now()}];
+  showMsg('resetMsg','✅ সফল','success');
+  setTimeout(()=>{closeModal();},1200);
+}
+function adminToggleBlock(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  const wasActive=u.active&&!u.locked;
+  if(wasActive){
+    DB.users = DB.users.map(x => x.id===u.id ? {...x, active:false, blockReason:'এডমিন কর্তৃক'} : x);
+  } else {
+    DB.users = DB.users.map(x => x.id===u.id ? {...x, active:true, locked:false, blockReason:'', failedAttempts:0} : x);
+  }
+  toast(wasActive?'ব্লক':'আনব্লক','success');
+}
+function adminVerify(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  DB.users = DB.users.map(x => x.id===u.id ? {...x, verified:true} : x);
+  toast(`${u.name} ভেরিফাইড`,'success');
+}
+function quickVerify(userId){
+  const u=DB.users.find(x=>x.id===userId);if(!u)return;
+  DB.users = DB.users.map(x => x.id===userId ? {...x, verified:true, active:true, locked:false, failedAttempts:0} : x);
+  toast(`${u.name} অনুমোদিত`,'success');
+}
+function quickBlock(userId){
+  const u=DB.users.find(x=>x.id===userId);if(!u)return;
+  DB.users = DB.users.map(x => x.id===userId ? {...x, active:false, blockReason:'এডমিন কর্তৃক'} : x);
+  toast('ব্লক','info');
+}
+function adminRemove2FA(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  DB.users = DB.users.map(x => x.id===u.id ? {...x, has2FA:false} : x);
+  toast('2FA বন্ধ','success');
+}
+function adminUnlockAccount(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  DB.users = DB.users.map(x => x.id===u.id ? {...x, locked:false, active:true, failedAttempts:0, lockedAt:null, lockReason:''} : x);
+  toast('✅ আনলক','success');
+}
+function adminDirectUnlock(userId){
+  const u=DB.users.find(x=>x.id===userId);if(!u)return;
+  DB.users = DB.users.map(x => x.id===userId ? {...x, locked:false, active:true, failedAttempts:0, lockedAt:null, lockReason:''} : x);
+  toast('✅ আনলক','success');
+}
+function adminDeleteUser(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  DB.users = DB.users.filter(x => x.id !== u.id);
+  toast('ডিলিট','success');
+}
+function adminViewSecurityLog(){
+  const u=findUserByInput(ctrlPhone.value);
+  if(!u){toast('নেই','error');return;}
+  const log=u.passwordHistory||[];
+  const refStats = getUserRefStats(u.phone);
+  openModal(`
+    <h3>📊 ${u.name}</h3>
+    <div class="card">
+      <div class="tx-detail-line"><span class="k">🔑 পাসওয়ার্ড</span><span class="v" style="font-family:monospace;color:var(--accent-light)">${u.pass}</span></div>
+      <div class="tx-detail-line"><span class="k">📊 চেঞ্জ</span><span class="v">${u.passwordChanges||0}</span></div>
+      <div class="tx-detail-line"><span class="k">🎁 রেফারেল কোড</span><span class="v">${u.referralCode}</span></div>
+      <div class="tx-detail-line"><span class="k">👥 রেফারেল</span><span class="v">${refStats.total}</span></div>
+      <div class="tx-detail-line"><span class="k">💰 আয়</span><span class="v">৳${refStats.earned}</span></div>
+    </div>
+    <button onclick="closeModal()">বন্ধ</button>
+  `);
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function loadSettings(){
+  const s=getSettings();
+  document.getElementById('settingCCNumber').value = s.ccNumber;
+  document.getElementById('settingCCLabel').value = s.ccLabel;
+  document.getElementById('settingBankName').value = s.bankName;
+  document.getElementById('settingBankTagline').value = s.bankTagline;
+  document.getElementById('settingCashoutFee').value = s.cashoutFee;
+  document.getElementById('settingAgentCommission').value = s.agentCommission;
+  document.getElementById('settingCashinFee').value = s.cashinFee;
+  document.getElementById('settingFdMin').value = s.fdMin;
+  document.getElementById('settingFdMax').value = s.fdMax;
+  document.getElementById('settingFdMinCancel').value = s.fdMinCancelMonths;
+  document.getElementById('settingFdRate1').value = s.fdRate1;
+  document.getElementById('settingFdRate2').value = s.fdRate2;
+  document.getElementById('settingFdRate3').value = s.fdRate3;
+  document.getElementById('settingFdRate4').value = s.fdRate4;
+  document.getElementById('settingFdRate5').value = s.fdRate5;
+  document.getElementById('settingFdPenalty').value = s.fdPenalty;
+  document.getElementById('settingMaxAttempts').value = s.maxAttempts;
+  document.getElementById('settingAutoLock').value = String(s.autoLock);
+  document.getElementById('settingRefBonus').value = s.refBonus;
+  document.getElementById('settingNewUserBonus').value = s.newUserBonus;
+  document.getElementById('settingRefMinWithdraw').value = s.refMinWithdraw;
+  document.getElementById('settingRefAutoFdMonths').value = s.refAutoFdMonths;
+  updateCCPreview();
+}
+function updateCCPreview(){
+  const n=document.getElementById('settingCCNumber').value||'-';
+  const l=document.getElementById('settingCCLabel').value||'হেল্পলাইন';
+  document.getElementById('ccPreviewNum').textContent=n;
+  document.getElementById('ccPreviewLabel').textContent=l;
+}
+document.addEventListener('input',e=>{
+  if(e.target.id==='settingCCNumber'||e.target.id==='settingCCLabel') updateCCPreview();
+});
+function saveSettings(){
+  const num=(document.getElementById('settingCCNumber').value||'').trim();
+  if(!num){showMsg('settingsMsg','কাস্টমার কেয়ার নাম্বার দিন','error');return;}
+  const s={...getSettings()};
+  s.ccNumber = num;
+  s.ccLabel = (document.getElementById('settingCCLabel').value||'').trim() || '২৪/৭ হেল্পলাইন';
+  s.bankName = (document.getElementById('settingBankName').value||'').trim() || 'সিদরাতুল ইসলামী ব্যাংক';
+  s.bankTagline = (document.getElementById('settingBankTagline').value||'').trim() || 'বিশ্বস্ত ইসলামী ব্যাংকিং সেবা';
+  s.cashoutFee = parseFloat(document.getElementById('settingCashoutFee').value)||1.4;
+  s.agentCommission = parseFloat(document.getElementById('settingAgentCommission').value)||0.4;
+  s.cashinFee = parseFloat(document.getElementById('settingCashinFee').value)||0.4;
+  s.fdMin = parseFloat(document.getElementById('settingFdMin').value)||10000;
+  s.fdMax = parseFloat(document.getElementById('settingFdMax').value)||5000000;
+  s.fdMinCancelMonths = parseInt(document.getElementById('settingFdMinCancel').value)||6;
+  s.fdRate1 = parseFloat(document.getElementById('settingFdRate1').value)||7;
+  s.fdRate2 = parseFloat(document.getElementById('settingFdRate2').value)||8;
+  s.fdRate3 = parseFloat(document.getElementById('settingFdRate3').value)||9;
+  s.fdRate4 = parseFloat(document.getElementById('settingFdRate4').value)||10;
+  s.fdRate5 = parseFloat(document.getElementById('settingFdRate5').value)||11;
+  s.fdPenalty = parseFloat(document.getElementById('settingFdPenalty').value)||2;
+  s.maxAttempts = parseInt(document.getElementById('settingMaxAttempts').value)||3;
+  s.autoLock = document.getElementById('settingAutoLock').value === 'true';
+  s.refBonus = parseFloat(document.getElementById('settingRefBonus').value)||70;
+  s.newUserBonus = parseFloat(document.getElementById('settingNewUserBonus').value)||10;
+  s.refMinWithdraw = parseFloat(document.getElementById('settingRefMinWithdraw').value)||2000;
+  s.refAutoFdMonths = parseInt(document.getElementById('settingRefAutoFdMonths').value)||12;
+  s.updatedBy = getAdmin().username;
+  s.updatedAt = new Date().toISOString();
+  setSettings(s);
+  MAX_FAILED_ATTEMPTS = s.maxAttempts;
+  applyBranding();
+  showMsg('settingsMsg','✅ সেভ হয়েছে','success');
+  toast('সেটিংস আপডেট','success');
+}
+
+/* ============================================================
+   ADMIN SELF
+   ============================================================ */
+function renderAdminSelf(){
+  const a=getAdmin();
+  document.getElementById('adminSelfUser').textContent=a.username;
+  document.getElementById('adminSelf2fa').textContent=a.has2FA?'✅ সক্রিয়':'❌ বন্ধ';
+  document.getElementById('adminSelfPassCount').textContent=(a.passwordChanges||0)+' বার';
+  const box=document.getElementById('adminQrBox');box.innerHTML='';
+  document.getElementById('adminSecretBox').textContent=a.secret||'-';
+  if(window.QRCode&&a.secret)new QRCode(box,{text:otpUri(a.secret,'admin'),width:130,height:130,colorDark:'#0a1f17',colorLight:'#fff'});
+}
+function adminChangeUsername(){
+  const a=getAdmin();
+  openModal(`
+    <h3>👤 ইউজারনেম</h3>
+    <label>নতুন</label>
+    <input type="text" id="newAdminUser">
+    <label>পাসওয়ার্ড</label>
+    <input type="password" id="confirmAdminPass">
+    <div id="adminUserMsg" class="msg"></div>
+    <button class="gold" onclick="confirmAdminUsername()">👤 পরিবর্তন</button>
+    <button class="ghost" onclick="closeModal()">বাতিল</button>
+  `);
+}
+function confirmAdminUsername(){
+  const a=getAdmin();
+  const newU=(document.getElementById('newAdminUser').value||'').trim();
+  const pass=document.getElementById('confirmAdminPass').value;
+  if(!newU||newU.length<3){showMsg('adminUserMsg','কমপক্ষে ৩ অক্ষর','error');return;}
+  if(pass!==a.password){showMsg('adminUserMsg','পাসওয়ার্ড ভুল','error');return;}
+  setAdmin({...a, username:newU});
+  showMsg('adminUserMsg','✅ সফল','success');
+  setTimeout(()=>{closeModal();renderAdminSelf();adminUser.value=newU;},1200);
+}
+function adminChangePassword(){
+  const a=getAdmin();
+  openModal(`
+    <h3>🔑 এডমিন পাসওয়ার্ড</h3>
+    <label>পুরাতন</label>
+    <input type="password" id="adminOldPass">
+    <label>নতুন</label>
+    <input type="password" id="adminNewPass1">
+    <label>আবার</label>
+    <input type="password" id="adminNewPass2">
+    <div id="adminPassMsg" class="msg"></div>
+    <button class="gold" onclick="confirmAdminPassword()">🔐 পরিবর্তন</button>
+    <button class="ghost" onclick="closeModal()">বাতিল</button>
+  `);
+}
+function confirmAdminPassword(){
+  const a=getAdmin();
+  const oP=document.getElementById('adminOldPass').value;
+  const p1=document.getElementById('adminNewPass1').value;
+  const p2=document.getElementById('adminNewPass2').value;
+  if(oP!==a.password){showMsg('adminPassMsg','পুরাতন ভুল','error');return;}
+  if(!p1||p1.length<6){showMsg('adminPassMsg','৬ অক্ষর','error');return;}
+  if(p1!==p2){showMsg('adminPassMsg','মিলছে না','error');return;}
+  setAdmin({...a, password:p1, passwordChanges:(a.passwordChanges||0)+1, lastPasswordChange:new Date().toISOString()});
+  showMsg('adminPassMsg','✅ সফল','success');
+  setTimeout(()=>{closeModal();renderAdminSelf();},1200);
+}
+function adminRegen2FA(){
+  const a=getAdmin();
+  const newSecret = genSecret();
+  setAdmin({...a, secret:newSecret, has2FA:true});
+  toast('নতুন 2FA','success');renderAdminSelf();
+  openModal(`
+    <h3>🔄 নতুন 2FA</h3>
+    <div id="qrHolder" style="text-align:center;padding:14px;background:#fff;border-radius:12px;width:fit-content;margin:12px auto"></div>
+    <div class="otp-secret">${newSecret}</div>
+    <button onclick="closeModal()">✅ বুঝেছি</button>
+  `);
+  setTimeout(()=>{const h=document.getElementById('qrHolder');if(h&&window.QRCode)new QRCode(h,{text:otpUri(newSecret,'admin'),width:180,height:180,colorDark:'#0a1f17',colorLight:'#fff'});},100);
+}
+function adminRemoveOwn2FA(){
+  const a=getAdmin();
+  setAdmin({...a, has2FA:false});
+  toast('2FA বন্ধ','success');renderAdminSelf();
+}
+
+/* ============================================================
+   WINDOW EXPORTS (for inline onclick handlers)
+   ============================================================ */
+window.toggleTheme=toggleTheme;window.closeModal=closeModal;window.viewImage=viewImage;
+window.openForgotPass=openForgotPass;window.login=login;window.register=register;
+window.logout=logout;window.switchTab=switchTab;
+window.transferUser=transferUser;window.cashOut=cashOut;window.cashIn=cashIn;
+window.agentToAgent=agentToAgent;window.agentUnlockAccount=agentUnlockAccount;
+window.approveCashOut=approveCashOut;window.rejectCashOut=rejectCashOut;
+window.switchFdTab=switchFdTab;window.calcFD=calcFD;window.createFD=createFD;
+window.openCancelFD=openCancelFD;window.confirmCancelFD=confirmCancelFD;
+window.copyRefCode=copyRefCode;window.shareRefCode=shareRefCode;window.withdrawReferral=withdrawReferral;
+window.userChangePassword=userChangePassword;window.confirmUserChangePassword=confirmUserChangePassword;
+window.userViewSecurity=userViewSecurity;
+window.closeAdmin=closeAdmin;window.adminLogin=adminLogin;window.adminLogout=adminLogout;
+window.adminTab=adminTab;window.setSearchType=setSearchType;window.liveSearch=liveSearch;
+window.viewUserDetail=viewUserDetail;window.viewTxDetail=viewTxDetail;
+window.approveRef=approveRef;window.rejectRef=rejectRef;
+window.quickVerify=quickVerify;window.quickBlock=quickBlock;
+window.adminCredit=adminCredit;window.adminDebit=adminDebit;
+window.adminResetPassword=adminResetPassword;window.confirmResetPassword=confirmResetPassword;
+window.adminToggleBlock=adminToggleBlock;window.adminVerify=adminVerify;
+window.adminRemove2FA=adminRemove2FA;window.adminUnlockAccount=adminUnlockAccount;
+window.adminDirectUnlock=adminDirectUnlock;window.adminDeleteUser=adminDeleteUser;
+window.adminViewSecurityLog=adminViewSecurityLog;window.loadSettings=loadSettings;window.saveSettings=saveSettings;
+window.adminChangeUsername=adminChangeUsername;window.confirmAdminUsername=confirmAdminUsername;
+window.adminChangePassword=adminChangePassword;window.confirmAdminPassword=confirmAdminPassword;
+window.adminRegen2FA=adminRegen2FA;window.adminRemoveOwn2FA=adminRemoveOwn2FA;
+
+/* ============================================================
+   INITIAL LOAD FROM FIREBASE
+   ============================================================ */
+async function initFromFirebase(){
+  try {
+    const [adminSnap, settingsSnap, usersSnap, txSnap, pendingSnap, fdsSnap, refsSnap] = await Promise.all([
+      get(FRef.admin), get(FRef.settings), get(FRef.users),
+      get(FRef.tx), get(FRef.pending), get(FRef.fds), get(FRef.refs)
+    ]);
+
+    // Admin
+    if(!adminSnap.exists()){
+      await set(FRef.admin, DEFAULT_ADMIN);
+      _cache.admin = {...DEFAULT_ADMIN};
+    } else {
+      _cache.admin = adminSnap.val();
+    }
+
+    // Settings
+    if(!settingsSnap.exists()){
+      const defSettings = {...DEFAULT_SETTINGS, updatedAt:new Date().toISOString()};
+      await set(FRef.settings, defSettings);
+      _cache.settings = defSettings;
+    } else {
+      _cache.settings = {...DEFAULT_SETTINGS, ...settingsSnap.val()};
+    }
+    MAX_FAILED_ATTEMPTS = _cache.settings.maxAttempts || 3;
+
+    // Users
+    _cache.users = mapToArr(usersSnap.val());
+
+    // First-time: create demo users
+    if(_cache.users.length === 0){
+      const s1=genSecret(),s2=genSecret();
+      const demo = [
+        {
+          id:'U'+Date.now(),name:'ডেমো ইউজার',phone:'01700000000',pass:'123456',
+          nid:'1234567890',dob:'1990-01-01',address:'ঢাকা',type:'user',balance:100000,
+          currencies:{BDT:100000,USD:0,EUR:0,SAR:0,AED:0,MYR:0},
+          secret:s1,has2FA:true,
+          images:{nidFront:'',nidBack:'',selfie:''},
+          referralCode: genRefCode(),
+          referredBy: null, referralEarnings: 0, refAutoFdCount: 0,
+          verified:true,active:true,locked:false,failedAttempts:0,
+          passwordChanges:0,lastPasswordChange:null,passwordHistory:[],
+          createdAt:new Date().toISOString()
+        },
+        {
+          id:'A'+Date.now(),name:'ডেমো এজেন্ট',phone:'01800000000',pass:'123456',
+          nid:'0987654321',dob:'1985-05-15',address:'চট্টগ্রাম',type:'agent',balance:50000,
+          currencies:{BDT:50000,USD:0,EUR:0,SAR:0,AED:0,MYR:0},
+          secret:s2,has2FA:true,
+          images:{nidFront:'',nidBack:'',selfie:''},
+          referralCode: genRefCode(),
+          referredBy: null, referralEarnings: 0, refAutoFdCount: 0,
+          verified:true,active:true,locked:false,failedAttempts:0,
+          passwordChanges:0,lastPasswordChange:null,passwordHistory:[],
+          createdAt:new Date().toISOString()
+        }
+      ];
+      _cache.users = demo;
+      await set(FRef.users, arrToMap(demo));
+      console.log('%c🕌 ডেমো ডেটা Firebase এ সেভ হয়েছে','color:#16a34a;font-size:16px;font-weight:bold');
+      console.log('%c👤 ইউজার: 01700000000 / 123456 | OTP: '+totp(s1),'color:#2563eb');
+      console.log('%c🏪 এজেন্ট: 01800000000 / 123456 | OTP: '+totp(s2),'color:#d4af37');
+      console.log('%c👑 এডমিন: admin / admin123 | OTP: '+totp(_cache.admin.secret),'color:#ef4444');
+    }
+
+    _cache.tx = mapToArr(txSnap.val()).sort((a,b)=>b.time-a.time);
+    _cache.pending = mapToArr(pendingSnap.val());
+    _cache.fds = mapToArr(fdsSnap.val());
+    _cache.refs = mapToArr(refsSnap.val());
+
+    // Setup real-time listeners
+    setupListeners();
+
+    _loaded = true;
+    applyBranding();
+
+    // Hide loading screen
+    setTimeout(()=>{
+      const ls = document.getElementById('loadingScreen');
+      ls.classList.add('hide');
+      setTimeout(()=>ls.remove(), 500);
+    }, 400);
+
+    toast('✅ ক্লাউডে কানেক্টেড','success');
+    console.log('%c☁️ Firebase Realtime Database connected','color:#3b82f6;font-size:14px;font-weight:bold');
+    console.log('%c💡 এডমিন: হেডারে ৫ বার ক্লিক','color:#f59e0b;font-size:13px');
+  } catch(e){
+    console.error('Firebase init error:', e);
+    document.getElementById('loadSub').textContent = '⚠️ কানেকশন ব্যর্থ — আবার চেষ্টা করুন';
+    document.getElementById('loadSub').style.color = '#f87171';
+    // Fallback to defaults so at least the UI works
+    _cache.admin = {...DEFAULT_ADMIN};
+    _cache.settings = {...DEFAULT_SETTINGS};
+    MAX_FAILED_ATTEMPTS = 3;
+    applyBranding();
+    setTimeout(()=>{
+      const ls = document.getElementById('loadingScreen');
+      if(ls){ ls.classList.add('hide'); setTimeout(()=>ls.remove(), 500); }
+      toast('❌ Firebase কানেকশন ব্যর্থ','error');
+    }, 3000);
+  }
+}
+
+// Start
+initFromFirebase();
+</script>
+</body>
+</html>
